@@ -18,3 +18,8 @@ tmtags
 db/*.sqlite3
 log/*.log
 tmp
+
+*.log
+*.lock
+*.pid
+config/connect/google.yml

@@ -6,6 +6,7 @@
     <%= stylesheet_link_tag :all %>
     <%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js' %>
     <%= javascript_include_tag :all %>
+    <script src="/javascripts/rails.js"></script>
     <%= csrf_meta_tag %>
     <%= viewport_meta_tag %>
     <%= apple_app_capable_meta_tag %>
@@ -14,6 +15,10 @@
   <%= content_tag :body, class: controller_name do %>
     <%= yield :top %>
     <%= render 'layouts/header' %>
+
+<p><%= flash[:notice] %>
+<p><%= flash[:error] %>
+    
     <div class="main">
       <%= yield %>
     </div>

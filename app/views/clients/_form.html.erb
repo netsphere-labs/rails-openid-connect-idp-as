@@ -1,8 +1,21 @@
+
+<% # @param client
+   # @param redirect_uris
+  %>
+
 <div>
   <%= f.label :name %>
   <%= f.text_field :name %>
 </div>
+
+<% redirect_uris.each do |redirect_uri| %>
 <div>
   <%= f.label :redirect_uri %>
-  <%= f.url_field :redirect_uri %>
+  <%= url_field_tag 'client[redirect_uris][]', redirect_uri %>
+</div>
+<% end %>
+
+<div>
+  <%= f.label :redirect_uri %>
+  <%= url_field_tag 'client[redirect_uris][]', '' %>
 </div>

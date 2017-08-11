@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+
+# OpenID Provider (OP) としての部分
 class AuthorizationsController < ApplicationController
   rescue_from Rack::OAuth2::Server::Authorize::BadRequest do |e|
     @error = e
@@ -5,10 +8,13 @@ class AuthorizationsController < ApplicationController
     render :error, status: e.status
   end
 
+  # 認証の開始: 確認画面を表示
+  # authorization_endpoint:"http://localhost:4000/authorizations/new"
   def new
     call_authorization_endpoint
   end
 
+  # ユーザの approve/denyを受けて、RPにリダイレクトバックする.
   def create
     call_authorization_endpoint :allow_approval, params[:approve]
   end

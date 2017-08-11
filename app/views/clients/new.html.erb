@@ -1,7 +1,8 @@
 <article>
   <h2><%= 'clients.new.title'.t %></h2>
   <%= form_for @client do |f| %>
-    <%= render 'clients/form', client: @client, f: f %>
+    <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
+                               f: f %>
     <%= f.submit %>
   <% end %>
 </article>

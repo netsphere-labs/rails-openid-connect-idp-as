@@ -63,6 +63,8 @@ module Authentication
     end
   end
 
+
+  # for before_filter
   def require_user_access_token
     require_access_token
     raise Rack::OAuth2::Server::Resource::Bearer::Unauthorized.new(:invalid_token, 'User token is required') unless current_token.account

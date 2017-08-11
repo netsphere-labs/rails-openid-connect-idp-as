@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+
+
 class Connect::Google < ActiveRecord::Base
   serialize :id_token
 
@@ -41,7 +44,7 @@ class Connect::Google < ActiveRecord::Base
   class << self
     def config
       unless @config
-        @config = YAML.load_file("#{Rails.root}/config/connect/google.yml")[Rails.env].symbolize_keys
+        @config = YAML.load_file(Rails.root.to_s + "/config/connect/google.yml")[Rails.env].symbolize_keys
         @config.merge! OpenIDConnect::Discovery::Provider::Config.discover!(
           @config[:issuer]
         ).as_json
@@ -83,7 +86,7 @@ class Connect::Google < ActiveRecord::Base
       id_token = OpenIDConnect::ResponseObject::IdToken.decode(
         token.id_token, jwks
       )
-      connect = find_or_initialize_by_identifier id_token.subject
+      connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
       connect.id_token = id_token
       connect.save!

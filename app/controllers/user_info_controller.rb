@@ -1,10 +1,14 @@
 class UserInfoController < ApplicationController
+  # See lib/authentication.rb
   before_filter :require_user_access_token
 
-  rescue_from FbGraph::Exception, Rack::OAuth2::Client::Error do |e|
+  #rescue_from FbGraph::Exception, Rack::OAuth2::Client::Error do |e|
+  rescue_from Rack::OAuth2::Client::Error do |e|
     provider = case e
+=begin                   
     when FbGraph::Exception
       'Facebook'
+=end
     when Rack::OAuth2::Client::Error
       'Google'
     end

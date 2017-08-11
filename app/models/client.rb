@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+
+# Relying Party (RP)
 class Client < ActiveRecord::Base
   [:contacts, :redirect_uris, :raw_registered_json].each do |serializable|
     serialize serializable, JSON
@@ -14,7 +17,10 @@ class Client < ActiveRecord::Base
   validates :secret,     presence: true
   validates :name,       presence: true
 
-  scope :dynamic, where(dynamic: true)
+  validate :check_redirect_uris
+  
+  # 第2引数はλ式
+  scope :dynamic, -> { where(dynamic: true) }
   scope :valid, lambda {
     where {
       (expires_at == nil) |
@@ -48,14 +54,31 @@ class Client < ActiveRecord::Base
       client.save!
       client
     end
-  end
+  end # class << self
 
+  # for validate
+  def check_redirect_uris
+    redirect_uris.each do |redirect_uri|
+      begin
+        uri = URI.parse(redirect_uri)
+        if !(uri && ['https', 'http'].include?(uri.scheme) && !uri.host.blank?)
+          errors.add :redirect_uris, 'invalid redirect_uri: ' + redirect_uri
+        end
+      rescue URI::InvalidURIError
+        errors.add :redirect_uris, 'invalid URI: ' + redirect_uri
+      end
+    end
+  end
+  private :check_redirect_uris
+  
+=begin
   # for views/clients/_form.html.erb
   attr_accessor :redirect_uri
   def redirect_uri=(redirect_uri)
     self.redirect_uris = Array(redirect_uri)
   end
-
+=end
+  
   def as_json(options = {})
     hash = raw_registered_json || {}
     hash.merge!(

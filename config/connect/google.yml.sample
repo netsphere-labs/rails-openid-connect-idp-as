@@ -1,0 +1,17 @@
+
+development: &defaults
+  # https://accounts.google.com/.well-known/openid-configuration
+  issuer: https://accounts.google.com
+
+  # Google API と完全に合わせる
+  client_id: クライアントID
+  client_secret: クライアントsecret
+  redirect_uri: http://localhost:4000/connect/google
+
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
+  redirect_uri: https://connect-op.herokuapp.com/connect/google
