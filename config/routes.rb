@@ -1,4 +1,4 @@
-ConnectOp::Application.routes.draw do
+Rails.application.routes.draw do
   resource :session,   only: :destroy
   resource :dashboard, only: :show
 
@@ -14,7 +14,9 @@ ConnectOp::Application.routes.draw do
 
   root to: 'top#index'
 
+  # 'webfinger', 'openid-configuration'
   match '.well-known/:id', to: 'discovery#show', :via => [:get]
+  
   match 'user_info',       to: 'user_info#show', :via => [:get, :post]
 
   post 'access_tokens', to: proc { |env| TokenEndpoint.new.call(env) }

@@ -1,16 +1,26 @@
 # -*- coding:utf-8; mode:ruby -*-
 
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'rails', '~>4.2.9'
 
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 4.2.9'
+
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+
+# Use jquery as the JavaScript library
 gem 'jquery-rails'
 
 # Supporting Rails 3 and 4.
 gem 'squeel'
 
 # 'caches_constants' class method that will cache lookup data
-gem 'constant_cache'
+# バグ修正が app/models/scope.rb にある
+gem 'constant_cache', '0.0.2'
 
 #gem 'html5_validators'
 gem 'validate_url'
@@ -22,7 +32,8 @@ gem 'validate_email'
 gem 'rack-oauth2'
 
 # depends on json, validate_email, validate_url, webfinger, ...
-gem 'openid_connect'
+# バグ修正が config/initializers 以下にある
+gem 'openid_connect', '1.1.3'
 
 group :development, :test do
   gem 'sqlite3'
