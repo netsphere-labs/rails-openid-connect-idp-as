@@ -43,19 +43,19 @@ class Connect::Google < ActiveRecord::Base
 
   class << self
     def config
-      unless @config
-        @config = YAML.load_file(Rails.root.to_s + "/config/connect/google.yml")[Rails.env].symbolize_keys
-        @config.merge! OpenIDConnect::Discovery::Provider::Config.discover!(
-          @config[:issuer]
-        ).as_json
-        if Rails.env.production?
-          @config.merge!(
+      return @config if @config
+      
+      @config = YAML.load_file(Rails.root.to_s + "/config/connect/google.yml")[Rails.env].symbolize_keys
+      @config.merge! OpenIDConnect::Discovery::Provider::Config.discover!(
+                       @config[:issuer]
+                     ).as_json
+      if Rails.env.production?
+        @config.merge!(
             client_id:     ENV['g_client_id'],
             client_secret: ENV['g_client_secret']
-          )
-        end
+        )
       end
-      @config
+      return @config
     end
 
     def client
@@ -92,5 +92,5 @@ class Connect::Google < ActiveRecord::Base
       connect.save!
       connect.account || Account.create!(google: connect)
     end
-  end
+  end # class << self
 end

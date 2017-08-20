@@ -7,7 +7,9 @@ ActiveSupport::Inflector.inflections do |inflect|
   # inflect.plural /^(ox)$/i, '\1en'
   # inflect.singular /^(ox)en/i, '\1'
   # inflect.irregular 'person', 'people'
-  inflect.uncountable %w( facebook connect/facebook google connect/google dashboard userinfo discovery )
+  inflect.uncountable %w( facebook connect/facebook google connect/google 
+                          paypal
+                          dashboard userinfo discovery )
 end
 
 # These inflection rules are supported but not enabled by default:

@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 Rails.application.routes.draw do
   resource :session,   only: :destroy
   resource :dashboard, only: :show
@@ -8,7 +10,12 @@ Rails.application.routes.draw do
   namespace :connect do
     resource :fake,     only: :create
     resource :facebook, only: :show
-    resource :google,   only: [:show, :new]
+
+    # client (RP) として接続 
+    resource :google,   only: [:new, :show]
+    # client (RP) として接続 
+    resource :paypal,   only: [:new, :show]
+    
     resource :client,   only: :create
   end
 

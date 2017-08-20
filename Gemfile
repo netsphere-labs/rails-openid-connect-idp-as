@@ -43,7 +43,8 @@ group :development, :test do
 
   # Access an IRB console on exception pages or by using <%= console %> in
   # views
-  gem 'web-console', '~> 2.0'
+  # v3.3 から rails5
+  gem 'web-console', '~> 3.2.1'
 end
 
 group :test do
@@ -53,5 +54,5 @@ end
 
 group :production do
   gem 'pg'
-  gem 'rack-ssl', :require => 'rack/ssl'
+  #gem 'rack-ssl', :require => 'rack/ssl'
 end
