@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 class CreateClients < ActiveRecord::Migration
   def self.up
     create_table :clients do |t|
@@ -8,7 +10,7 @@ class CreateClients < ActiveRecord::Migration
         :name,
         :jwks_uri,
         :sector_identifier,
-        :redirect_uris
+        :redirect_uris  # 配列
       )
       t.boolean :dynamic, :native, :ppid, default: false
       t.datetime :expires_at
