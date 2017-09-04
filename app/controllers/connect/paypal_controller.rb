@@ -65,11 +65,32 @@ class PaypalConnector
       # => しかし、実際には id_token は得られない。
       token = client.access_token! :basic # :client_secret_basic # :secret_in_body
 =begin
-      デコードしようがない。
+こういうtoken response;
+
+Vary: Authorization
+Cache-Control: max-age=0, no-cache, no-store, must-revalidate
+Pragma: no-cache
+Connection: close
+Content-Type: application/json
+Content-Length: 0
+
+{
+  "scope":"phone address email openid profile",
+  "nonce":ランダムな文字列1,
+  "access_token":ランダムな文字列2,
+  "token_type":"Bearer",
+  "expires_in":28800,
+  "refresh_token":ランダムな文字列3
+}
+ここまで.
+=end
+      
+      # これではデコードしようがない。
+      raise "give up."
+      
       id_token = OpenIDConnect::ResponseObject::IdToken.decode(
         token.id_token, :self_issued #, jwks
       )
-=end
       
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
