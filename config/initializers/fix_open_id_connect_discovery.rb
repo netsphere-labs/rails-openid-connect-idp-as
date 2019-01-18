@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# For openid_connect v0.9.2, v1.1.3.
+# For openid_connect v0.9.2, v1.1.3, v1.1.5.
 #
 # issuer: https://accounts.google.com
 # の場合に, http でアクセスしてしまって not found になってしまうのを修正。

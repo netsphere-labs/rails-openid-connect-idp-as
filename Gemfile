@@ -33,7 +33,7 @@ gem 'rack-oauth2'
 
 # depends on json, validate_email, validate_url, webfinger, ...
 # バグ修正が config/initializers 以下にある
-gem 'openid_connect', '1.1.3'
+gem 'openid_connect', '1.1.5'
 
 #gem 'public_suffix', '< 3.0'
 #gem 'json-jwt', '<= 1.9.2'
