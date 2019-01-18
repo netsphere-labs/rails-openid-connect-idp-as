@@ -35,6 +35,9 @@ gem 'rack-oauth2'
 # バグ修正が config/initializers 以下にある
 gem 'openid_connect', '1.1.3'
 
+#gem 'public_suffix', '< 3.0'
+#gem 'json-jwt', '<= 1.9.2'
+
 group :development, :test do
   gem 'sqlite3'
   gem 'test-unit', '~> 3.0'

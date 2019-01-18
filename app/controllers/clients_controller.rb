@@ -58,7 +58,7 @@ class ClientsController < ApplicationController
     redirect_to dashboard_url
   end
 
-  private ###################################################################
+private ###################################################################
   
   # Never trust parameters from the scary internet, only allow the white
   # list through.
