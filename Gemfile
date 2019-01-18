@@ -56,6 +56,7 @@ group :test do
 end
 
 group :production do
-  gem 'pg'
+  # Rails v4.2 は pg v1.0.0 では動かない。非互換.
+  gem 'pg', '~> 0.21'
   #gem 'rack-ssl', :require => 'rack/ssl'
 end
