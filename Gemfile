@@ -27,7 +27,7 @@ gem 'validate_url'
 gem 'validate_email'
 
 # This gem is deprecated. Use 'fb_graph2' gem instead.
-#gem 'fb_graph'
+gem 'fb_graph2'
 
 gem 'rack-oauth2'
 

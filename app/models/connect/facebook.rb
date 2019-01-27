@@ -1,3 +1,4 @@
+
 class Connect::Facebook < ActiveRecord::Base
   belongs_to :account
 
@@ -5,7 +6,7 @@ class Connect::Facebook < ActiveRecord::Base
   validates :access_token, presence: true, uniqueness: true
 
   def me
-    @me ||= FbGraph::User.me(self.access_token).fetch
+    @me ||= FbGraph2::User.me(self.access_token).fetch
   end
 
   def userinfo
@@ -38,7 +39,7 @@ class Connect::Facebook < ActiveRecord::Base
     end
 
     def auth
-      FbGraph::Auth.new config[:client_id], config[:client_secret]
+      FbGraph2::Auth.new config[:client_id], config[:client_secret]
     end
 
     def authenticate(cookies)

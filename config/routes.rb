@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
     # client (RP) として接続 
     resource :google,   only: [:new, :show]
+
     # client (RP) として接続 
     resource :paypal,   only: [:new, :show]
     

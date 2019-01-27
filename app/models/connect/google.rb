@@ -68,6 +68,8 @@ class Connect::Google < ActiveRecord::Base
       )
     end
 
+    
+    # @return Authentication Request URL
     def authorization_uri(options = {})
       client.authorization_uri options.merge(
         scope: config[:scopes_supported]
