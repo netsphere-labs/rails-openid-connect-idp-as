@@ -6,7 +6,9 @@ class Client < ActiveRecord::Base
     serialize serializable, JSON
   end
 
+  # account が client を所有しているが、これは違うんじゃないかな?
   belongs_to :account
+  
   has_many :access_tokens
   has_many :authorizations
 
