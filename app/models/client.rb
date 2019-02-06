@@ -6,7 +6,8 @@ class Client < ActiveRecord::Base
     serialize serializable, JSON
   end
 
-  # account が client を所有しているが、これは違うんじゃないかな?
+  # 'developer' account が client を所有する.
+  # 通常, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.
   belongs_to :account
   
   has_many :access_tokens

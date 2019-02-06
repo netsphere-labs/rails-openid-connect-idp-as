@@ -6,7 +6,8 @@ class Account < ActiveRecord::Base
   has_one :google,   class_name: 'Connect::Google'
   has_one :fake,     class_name: 'Connect::Fake'
 
-  # account が client を所有しているが、これは違うんじゃないかな?
+  # 'developer' account が client を所有する.
+  # 通常, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.
   has_many :clients
   
   has_many :access_tokens
