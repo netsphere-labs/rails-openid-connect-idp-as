@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2.9'
+gem 'rails', '~> 4.2.11'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -26,20 +26,21 @@ gem 'constant_cache', '0.0.2'
 gem 'validate_url'
 gem 'validate_email'
 
-# This gem is deprecated. Use 'fb_graph2' gem instead.
+# Facebook.
 gem 'fb_graph2'
 
 gem 'rack-oauth2'
 
 # depends on json, validate_email, validate_url, webfinger, ...
 # バグ修正が config/initializers 以下にある
-gem 'openid_connect', '~> 1.1.5'
+gem 'openid_connect', '~> 1.1.8'
 
 #gem 'public_suffix', '< 3.0'
 #gem 'json-jwt', '<= 1.9.2'
 
 group :development, :test do
-  gem 'sqlite3'
+  # v1.4.0 未対応.
+  gem 'sqlite3', '~> 1.3.13'
   gem 'test-unit', '~> 3.0'
   # A concurrent (multi-process) HTTP 1.1 server.
   #gem 'puma'

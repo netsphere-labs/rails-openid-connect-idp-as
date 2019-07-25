@@ -35,6 +35,15 @@ To see it in action right now:
 
 ## How to Run This Example on Your Machine
 
+### Requirements
+
+ - Ruby on Rails v4.2
+ - fb_graph2
+ - openid_connect
+
+This sample application does not use omniauth-openid-connect.
+
+
 ### Localhost
 
 To run this in development mode on your local machine:
