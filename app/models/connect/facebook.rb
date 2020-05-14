@@ -1,7 +1,6 @@
+# -*- coding:utf-8 -*-
 
-class Connect::Facebook < ActiveRecord::Base
-  belongs_to :account
-
+class Connect::Facebook < Connect::Base
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
 
@@ -42,12 +41,24 @@ class Connect::Facebook < ActiveRecord::Base
       FbGraph2::Auth.new config[:client_id], config[:client_secret]
     end
 
+    # Facebook client-side は Implicit Flow なので, 必ずトークンの検証が必要.
+    # これを怠ると, token hijacking される。
+    # Facebook サイトの文書は, 相互に異なったことが書いてあったり、
+    # そもそも検証が必要ということを強調しておらず、ひどい。
     def authenticate(cookies)
+      # fb_graph2 では, from_cookie() 内で, SignedRequest の検証を自動的に行う.
+      # client_secret のハッシュ値との比較。
+      # => なので, client_secret が必要。
       _auth_ = auth.from_cookie(cookies)
-      connect = find_or_initialize_by_identifier _auth_.user.identifier
+      print _auth_.inspect # DEBUG
+      connect = find_or_initialize_by(identifier: _auth_.user.identifier)
+      print connect.inspect # DEBUG
       connect.access_token = _auth_.access_token.access_token
-      connect.save!
-      connect.account || Account.create!(facebook: connect)
+      Account.transaction do 
+        connect.account || Account.create!(facebook: connect)
+        connect.save!
+      end
+      return connect.account
     end
   end
 end

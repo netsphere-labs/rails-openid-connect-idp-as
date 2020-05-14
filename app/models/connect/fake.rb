@@ -1,5 +1,5 @@
-class Connect::Fake < ActiveRecord::Base
-  belongs_to :account
+
+class Connect::Fake < Connect::Base
 
   def userinfo
     OpenIDConnect::ResponseObject::UserInfo.new(

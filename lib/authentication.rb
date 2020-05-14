@@ -81,8 +81,11 @@ module Authentication
 
   def authenticate(account)
     if account
+      raise TypeError if !account.is_a?(Account)
       @current_account = account
       session[:current_account] = account.id
+    else
+      unauthenticate!()
     end
   end
 

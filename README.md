@@ -54,6 +54,10 @@ To run this in development mode on your local machine:
 * modify `config/connect/id_token/issuer.yml` -- change `issuer` to http://localhost:3000
 * `bundle exec rails server -p 3000`
 
+Facebook
+   config/connect/facebook.yml
+   Set `client_id` and `client_secret`
+   
 Point your browser at http://localhost:3000
 
 If you download and run [the sample RP server](https://connect-rp.herokuapp.com),

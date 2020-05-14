@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:fb="http://www.facebook.com/2008/fbml">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title><%= 'site.title'.t %> - <%= 'site.description'.t %></title>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title><%= 'site.title'.t %> - <%= 'site.description'.t %></title>
     
-    <link rel="stylesheet" href="/stylesheets/layout.css" />
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= stylesheet_link_tag params[:controller] %>
-    <%= javascript_include_tag 'application' %>
+  <link rel="stylesheet" href="/stylesheets/layout.css" />
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= stylesheet_link_tag params[:controller] %>
+  <%= javascript_include_tag 'application' %>
 
     <%= csrf_meta_tags %>
     <%= apple_app_capable_meta_tag %>
     <%= apple_app_icon_link_tag %>
-  </head>
-  <%= content_tag :body, class: controller_name do %>
+</head>
+<%= content_tag :body, class: controller_name do %>
     <%= yield :top %>
     <%= render 'layouts/header' %>
 

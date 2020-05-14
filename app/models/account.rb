@@ -2,9 +2,9 @@
 
 # ユーザアカウント
 class Account < ActiveRecord::Base
-  has_one :facebook, class_name: 'Connect::Facebook'
-  has_one :google,   class_name: 'Connect::Google'
-  has_one :fake,     class_name: 'Connect::Fake'
+  has_one :facebook, class_name: 'Connect::Facebook', dependent: :destroy
+  has_one :google,   class_name: 'Connect::Google', dependent: :destroy
+  has_one :fake,     class_name: 'Connect::Fake', dependent: :destroy
 
   # 'developer' account が client を所有する.
   # 通常, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.

@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 20120229153919) do
 
   create_table "connect_facebook", force: :cascade do |t|
     t.integer  "account_id"
-    t.string   "identifier"
+    t.string   "identifier",   null: false
     t.string   "access_token"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20120229153919) do
 
   create_table "connect_google", force: :cascade do |t|
     t.integer  "account_id"
-    t.string   "identifier"
+    t.string   "identifier",   null: false
     t.string   "access_token"
     t.text     "id_token"
     t.datetime "created_at"

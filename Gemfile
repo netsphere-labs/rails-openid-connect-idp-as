@@ -2,12 +2,18 @@
 
 source 'https://rubygems.org'
 
+# Downgrade (remove default flag):
+#    gem environment
+#      - INSTALLATION DIRECTORY: /usr/local/lib/ruby/gems/2.5.0
+#    rm /usr/local/lib/ruby/gems/2.5.0/specifications/default/bundler-2.1.4.gemspec 
+gem 'bundler', '~> 1.17'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2.11'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+# 'Ruby Sass' has reached EOL and should no longer be used.
+#gem 'sass-rails', '~> 5.0'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -15,6 +21,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Squeel unlocks the power of Arel.
 # Supporting Rails 3 and 4.
 gem 'squeel'
 
@@ -27,6 +34,9 @@ gem 'validate_url'
 gem 'validate_email'
 
 # Facebook.
+# 2020年5月現在, 比較的最近までメンテナンスされているものは、次の2択:
+#   - https://github.com/nov/fb_graph2
+#   - https://github.com/arsduo/koala
 gem 'fb_graph2'
 
 gem 'rack-oauth2'

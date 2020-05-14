@@ -1,7 +1,23 @@
+
+# Apps:
+# https://developers.facebook.com/apps/
+
+# Permissions Reference - Facebook Login
+# https://developers.facebook.com/docs/facebook-login/permissions
+
 development: &defaults
-  client_id: 131909826902957
-  client_secret: 101c7ebebb894c551bbe9f461bfe9e8f
-  scope: user_birthday, user_location, user_website, email
+  client_id: XXXXXXXXXXXXX
+  client_secret: XXXXXXXXXXXXXXXXXXXXXXXXXXX
+  scope: user_birthday,user_location,email,user_friends,user_gender,user_hometown
+
+# Requires the App Review:
+#   - user_age_range
+#   - user_birthday
+#   - user_friends
+#   - user_gender
+#   - user_hometown
+#   - user_location
+#   - user_photos
 
 test:
   <<: *defaults

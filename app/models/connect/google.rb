@@ -1,10 +1,8 @@
 # -*- coding:utf-8 -*-
 
 
-class Connect::Google < ActiveRecord::Base
+class Connect::Google < Connect::Base
   serialize :id_token
-
-  belongs_to :account
 
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
@@ -83,6 +81,7 @@ class Connect::Google < ActiveRecord::Base
     end
 
     def authenticate(code)
+      # token の検証
       client.authorization_code = code
       token = client.access_token! :secret_in_body
       id_token = OpenIDConnect::ResponseObject::IdToken.decode(
@@ -91,8 +90,11 @@ class Connect::Google < ActiveRecord::Base
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
       connect.id_token = id_token
-      connect.save!
-      connect.account || Account.create!(google: connect)
+      Account.transaction do
+        connect.account || Account.create!(google: connect)
+        connect.save!
+      end
+      return connect.account
     end
   end # class << self
 end

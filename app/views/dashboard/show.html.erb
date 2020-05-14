@@ -1,5 +1,9 @@
 <section>
   <h2><%= 'dashboard.title'.t %></h2>
+
+  <p>Account: <%= @account.inspect %>
+  <p>Connect::Facebook: <%= @account.facebook.inspect %>
+    
   <%= render @clients %>
 </section>
 
