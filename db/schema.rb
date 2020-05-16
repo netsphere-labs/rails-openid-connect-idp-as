@@ -94,27 +94,33 @@ ActiveRecord::Schema.define(version: 20120229153919) do
   add_index "clients", ["identifier"], name: "index_clients_on_identifier", unique: true
 
   create_table "connect_facebook", force: :cascade do |t|
-    t.integer  "account_id"
+    t.integer  "account_id",   null: false
     t.string   "identifier",   null: false
     t.string   "access_token"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "connect_facebook", ["access_token"], name: "index_connect_facebook_on_access_token", unique: true
+  add_index "connect_facebook", ["identifier"], name: "index_connect_facebook_on_identifier", unique: true
+
   create_table "connect_fakes", force: :cascade do |t|
-    t.integer  "account_id"
+    t.integer  "account_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "connect_google", force: :cascade do |t|
-    t.integer  "account_id"
+    t.integer  "account_id",   null: false
     t.string   "identifier",   null: false
     t.string   "access_token"
     t.text     "id_token"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "connect_google", ["access_token"], name: "index_connect_google_on_access_token", unique: true
+  add_index "connect_google", ["identifier"], name: "index_connect_google_on_identifier", unique: true
 
   create_table "id_token_request_objects", force: :cascade do |t|
     t.integer  "id_token_id"

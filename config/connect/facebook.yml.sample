@@ -6,8 +6,8 @@
 # https://developers.facebook.com/docs/facebook-login/permissions
 
 development: &defaults
-  client_id: XXXXXXXXXXXXX
-  client_secret: XXXXXXXXXXXXXXXXXXXXXXXXXXX
+  client_id: HERE IS 'APP ID'
+  client_secret: HERE IS 'APP SECRET'
   scope: user_birthday,user_location,email,user_friends,user_gender,user_hometown
 
 # Requires the App Review:

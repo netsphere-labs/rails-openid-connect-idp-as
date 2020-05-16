@@ -35,5 +35,6 @@ tmtags
 *.log
 *.lock
 *.pid
+config/connect/facebook.yml
 config/connect/google.yml
 config/connect/paypal.yml
