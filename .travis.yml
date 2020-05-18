@@ -1,8 +1,10 @@
+# ruby v2.7以降 bundler 2系統. Rails 4.2と両立しない。
+
 language: ruby
 rvm:
   - 2.5
   - 2.6
-  - 2.7
-  - jruby-head
-  - ruby-head
+#  - 2.7
+#  - jruby-head
+#  - ruby-head
   
