@@ -16,10 +16,12 @@ gem 'rails', '~> 4.2.11'
 #gem 'sass-rails', '~> 5.0'
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+# OSVDB-126747 fix.
+gem 'uglifier', '>= 2.7.2'
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
+# CVE-2019-11358 fix.
+gem 'jquery-rails', '>= 4.3.4'
 
 # Squeel unlocks the power of Arel.
 # Supporting Rails 3 and 4.
