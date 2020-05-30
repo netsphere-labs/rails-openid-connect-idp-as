@@ -12,10 +12,10 @@ Rails.application.routes.draw do
     resource :facebook, only: :show
 
     # client (RP) として接続 
-    resource :google,   only: [:new, :show]
+    resource :google,   only: [:create, :show]
 
     # client (RP) として接続 
-    resource :paypal,   only: [:new, :show]
+    resource :paypal,   only: [:create, :show]
     
     resource :client,   only: :create
   end

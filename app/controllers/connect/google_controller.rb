@@ -15,8 +15,8 @@ class Connect::GoogleController < ApplicationController
   end
 
 
-  # 認証開始 => googleにリダイレクト
-  def new
+  # [POST] 認証開始 => googleにリダイレクト
+  def create
     session[:state] = SecureRandom.hex(32)
     session[:nonce] = SecureRandom.hex(32)
     redirect_to Connect::Google.authorization_uri(

@@ -1,6 +1,6 @@
 # OpenIDConnect Sample
 
-A sample OpenID Connect Provider ("OP") using the `openid_connect` gem.
+A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem.
 
 
 ## Resources
@@ -41,7 +41,7 @@ To see it in action right now:
  - fb_graph2
  - openid_connect
 
-This sample application does not use omniauth-openid-connect.
+This sample application does not use "omniauth-openid-connect" gem.
 
 
 ### Localhost
@@ -50,12 +50,14 @@ To run this in development mode on your local machine:
 
 * Download (or fork or clone) this repo
 * `bundle install` (see "Note" section below if you get "pg"-gem-related problems)
-* `bundle exec rake db:create db:migrate db:seed` (you have SQLite installed, right?)
+* `bundle exec rake db:create db:migrate db:seed`
+  If you have SQLite installed, `db:create` is not needed.
+
 * modify `config/connect/id_token/issuer.yml` -- change `issuer` to http://localhost:3000
 * `bundle exec rails server -p 3000`
 
 Facebook
-   config/connect/facebook.yml
+   Copy config/connect/facebook.yml from facebook.yml.sample
    Set `client_id` and `client_secret`
    
 Point your browser at http://localhost:3000

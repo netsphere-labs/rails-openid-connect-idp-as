@@ -1,5 +1,11 @@
 # -*- coding:utf-8 -*-
 
+# 仕様に準拠していない点を通す修正.
+#   issuer: https://www.paypal.com
+#   configuration
+#     https://www.paypal.com/.well-known/openid-configuration になるはずだが,
+#     https://www.paypalobjects.com/.well-known/openid-configuration に301リダ
+#     イレクトされる.
 class OpenIDConnect::Discovery::Provider::Config
   # OpenID Connect Discovery 1.0 によれば、
   # OpenID Provider Configuration URI は、'issuer' にパスを付けることになって
@@ -20,6 +26,9 @@ class OpenIDConnect::Discovery::Provider::Config
   end
 end
 
+
+# omniauth-paypal パッケージはすでに廃れている。
+# omniauth-paypal-oauth2 パッケージは, 開発が継続。
 
 class PaypalConnector
 
@@ -51,7 +60,8 @@ class PaypalConnector
     def authorization_uri(options = {})
       # テストのため、サポートされているもの全部。
       client.authorization_uri options.merge(
-                       scope: (config[:scope] || config[:scopes_supported])
+                        scope: (config[:scope] || config[:scopes_supported]),
+                        #response_type: 'code id_token'
                              )
     end
 
@@ -60,37 +70,30 @@ class PaypalConnector
       client.authorization_code = code
 
       # access_token!() は Rack::OAuth2::Client のメソッド.
-      # この中で token_endpoint にアクセスする
-      # access_token に加えて, id_token を得る.
+      # この中で token_endpoint にアクセスする.
+      # => access_token に加えて, id_token を得る, はず。
+      # ここのドキュメントでも, id_token が得られる図になっている。
+      # https://developer.paypal.com/docs/connect-with-paypal/integrate/#6-get-access-token
+
       # => しかし、実際には id_token は得られない。
       token = client.access_token! :basic # :client_secret_basic # :secret_in_body
-=begin
-こういうtoken response;
+      # これは使えない
+      #id_token = OpenIDConnect::ResponseObject::IdToken.decode(
+      #  token.id_token, :self_issued #, jwks
+      #)
 
-Vary: Authorization
-Cache-Control: max-age=0, no-cache, no-store, must-revalidate
-Pragma: no-cache
-Connection: close
-Content-Type: application/json
-Content-Length: 0
-
-{
-  "scope":"phone address email openid profile",
-  "nonce":ランダムな文字列1,
-  "access_token":ランダムな文字列2,
-  "token_type":"Bearer",
-  "expires_in":28800,
-  "refresh_token":ランダムな文字列3
-}
-ここまで.
-=end
-      
-      # これではデコードしようがない。
-      raise "give up."
-      
-      id_token = OpenIDConnect::ResponseObject::IdToken.decode(
-        token.id_token, :self_issued #, jwks
-      )
+      # もう一度 API を叩く. もはや OpenID Connect ではない.
+      http_client = Rack::OAuth2.http_client
+      options = {:schema => 'paypalv1.1'}
+      headers = {
+        'Content-Type' => 'application/json',
+        'Authorization' => 'Bearer ' + token.access_token
+      }
+      r = http_client.get(
+            config[:userinfo_endpoint],
+            options,
+            headers)
+      raise r.inspect  # DEBUG
       
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
@@ -117,8 +120,8 @@ class Connect::PaypalController < ApplicationController
   end
 
   
-  # 認証開始 => PayPal にリダイレクト
-  def new
+  # [POST] 認証開始 => PayPal にリダイレクト
+  def create
     session[:state] = SecureRandom.hex(32)
     uri = PaypalConnector.authorization_uri(
       state: session[:state]

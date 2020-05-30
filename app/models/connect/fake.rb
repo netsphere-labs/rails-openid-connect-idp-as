@@ -15,7 +15,13 @@ class Connect::Fake < Connect::Base
 
   class << self
     def authenticate
-      Account.create!(fake: create!)
+      connect = new()
+      Account.transaction do
+        Account.create!(fake: connect)
+        connect.save!
+      end # transaction
+      
+      return connect.account
     end
   end
 end

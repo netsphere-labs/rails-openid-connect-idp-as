@@ -57,7 +57,7 @@ class Connect::Facebook < Connect::Base
       Account.transaction do 
         connect.account || Account.create!(facebook: connect)
         connect.save!
-      end
+      end # transaction
       return connect.account
     end
   end
