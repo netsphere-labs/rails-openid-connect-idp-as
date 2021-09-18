@@ -53,11 +53,13 @@ To run this in development mode on your local machine:
 * `bundle exec rake db:create db:migrate db:seed`
   If you have SQLite installed, `db:create` is not needed.
 
-* modify `config/connect/id_token/issuer.yml` -- change `issuer` to http://localhost:3000
-* `bundle exec rails server -p 3000`
+* modify `config/connect/id_token/issuer.yml` -- change `issuer` to `http://localhost:3000`
+```
+  $ <kbd>bundle exec rails server -p 3000</kbd>
+```
 
 Facebook
-   Copy config/connect/facebook.yml from facebook.yml.sample
+   Copy `config/connect/facebook.yml` from `facebook.yml.sample`
    Set `client_id` and `client_secret`
    
 Point your browser at http://localhost:3000

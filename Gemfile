@@ -8,6 +8,9 @@ source 'https://rubygems.org'
 #    rm /usr/local/lib/ruby/gems/2.5.0/specifications/default/bundler-2.1.4.gemspec 
 gem 'bundler', '~> 1.17'
 
+# v2.0 で BigDecimal.new が廃止.
+gem 'bigdecimal', '~> 1.4.4'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2.11'
 
