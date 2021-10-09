@@ -2,13 +2,12 @@
 
 A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem.
 
+Ruby on Rails. See https://www.nslabs.jp/digital-identity.rhtml
 
 ## Resources
 
 For this sample:
-
-* View source on GitHub: https://github.com/nov/openid_connect_sample
-* Report Issues on GitHub: https://github.com/nov/openid_connect_sample/issues
+ * View source on GitHub:   https://github.com/netsphere-labs/openid_connect_sample/
 
 
 For more information, see readme and wiki for `openid_connect` gem:
