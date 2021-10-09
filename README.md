@@ -4,11 +4,11 @@ A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem.
 
 Ruby on Rails. See https://www.nslabs.jp/digital-identity.rhtml
 
+
 ## Resources
 
 For this sample:
  * View source on GitHub:   https://github.com/netsphere-labs/openid_connect_sample/
-
 
 For more information, see readme and wiki for `openid_connect` gem:
 
@@ -16,8 +16,8 @@ For more information, see readme and wiki for `openid_connect` gem:
 
 
 Also of interest, the corresponding sample RP:
-
-* https://github.com/nov/openid_connect_sample_rp
+ * [OmniAuth2, OpenID Connect sample](https://gitlab.com/netsphere/rails-examples/-/tree/main/omniauth-oidc-rp-sample) the Authorization Code Flow, the Implicit Flow. And, Single Logout (SLO) based on OpenID Connect RP-Initiated Logout 1.0.
+ * [OpenID Connect - Implicit Flow Relying Party (RP) sample](https://github.com/netsphere-labs/openid-connect-implicit-flow-rp-sample/)
 
 
 ## Live Example
