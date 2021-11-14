@@ -1,4 +1,6 @@
-class Authorization < ActiveRecord::Base
+
+# クライアント (RP) からの認証
+class Authorization < ApplicationRecord
   belongs_to :account
   belongs_to :client
   has_many :authorization_scopes

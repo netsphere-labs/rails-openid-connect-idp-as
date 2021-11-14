@@ -61,4 +61,5 @@ class Connect::Facebook < Connect::Base
       return connect.account
     end
   end
-end
+
+end # class Connect::Facebook

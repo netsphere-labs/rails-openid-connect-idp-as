@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 
+# Relying Party (RP) テーブル
 class CreateClients < ActiveRecord::Migration
   def self.up
     create_table :clients do |t|

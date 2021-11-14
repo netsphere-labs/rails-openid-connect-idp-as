@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 
-
 class Connect::Google < Connect::Base
   serialize :id_token
 
@@ -97,4 +96,5 @@ class Connect::Google < Connect::Base
       return connect.account
     end
   end # class << self
-end
+
+end # class Connect::Google

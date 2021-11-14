@@ -4,12 +4,17 @@
 class ClientsController < ApplicationController
   before_filter :require_authentication
 
+  # GET /clients/new
   def new
     @client = current_account.clients.new
     # redirect_uri は複数持てる.
     @redirect_uris = ['']
   end
 
+  def edit
+    @client = current_account.clients.find(params[:id])
+    @redirect_uris = @client.redirect_uris
+  end
   
   def create
     @client = current_account.clients.new(client_params.permit(:name))
@@ -28,12 +33,7 @@ class ClientsController < ApplicationController
     end
   end
 
-  def edit
-    @client = current_account.clients.find(params[:id])
-    @redirect_uris = @client.redirect_uris
-  end
-
-  
+  # PATCH/PUT /clients/1 or /clients/1.json
   def update
     @client = current_account.clients.find(params[:id])
     @redirect_uris = client_params.permit(redirect_uris: [])[:redirect_uris]
@@ -52,7 +52,7 @@ class ClientsController < ApplicationController
     end
   end
 
-  
+  # DELETE /clients/1 or /clients/1.json
   def destroy
     current_account.clients.find(params[:id]).destroy
     redirect_to dashboard_url

@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+
+# テナント. ここに Relying Party (RP) をぶら下げる.
 class CreateAccounts < ActiveRecord::Migration
   def self.up
     create_table :accounts do |t|

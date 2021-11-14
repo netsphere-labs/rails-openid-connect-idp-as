@@ -1,16 +1,41 @@
+# -*- coding:utf-8 -*-
+
 # This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
 # Examples:
 #
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
+#   Character.create(name: 'Luke', movie: movies.first)
 
+require 'faker'
 
-Scope.create [
+10.times do |i| # 0始まり
+  locale = case i
+           when 0..2; 'en_GB'
+           when 3..5; 'ja_JP'
+           when 6..7; 'zh_TW'
+           when 8..9; 'fr_FR'
+           end
+  Faker::Config.locale = locale
+
+  FakeUser.create!(
+    name:     Faker::Name.name,
+    email:    Faker::Internet.email,
+    address:  Faker::Address.full_address,
+    profile:  Faker::Internet.url,
+    locale:   locale,
+    phone_number: Faker::PhoneNumber.phone_number,
+    verified: false
+  )
+end
+
+# Scope Values
+Scope.create! [
   {name: 'openid' },
   {name: 'profile'},
   {name: 'email'  },
   {name: 'address'},
   {name: 'phone'}
 ]
+

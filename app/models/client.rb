@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Relying Party (RP)
+# Relying Party (RP) を保存する
 class Client < ActiveRecord::Base
   [:contacts, :redirect_uris, :raw_registered_json].each do |serializable|
     serialize serializable, JSON

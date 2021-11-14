@@ -9,7 +9,7 @@ class AuthorizationsController < ApplicationController
   end
 
   # 認証の開始: 確認画面を表示
-  # authorization_endpoint:"http://localhost:4000/authorizations/new"
+  # authorization_endpoint: "http://localhost:4000/authorizations/new"
   def new
     call_authorization_endpoint
   end
