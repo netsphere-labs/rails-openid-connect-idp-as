@@ -56,7 +56,7 @@ en:
       title: Endpoint Info
   clients:
     new:
-      title: Register New Client
+      title: Register New Client...
   authorizations:
     new:
       title: Authorize %{client} ?

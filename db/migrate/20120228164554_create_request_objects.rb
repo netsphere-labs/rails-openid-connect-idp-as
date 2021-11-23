@@ -1,4 +1,4 @@
-class CreateRequestObjects < ActiveRecord::Migration
+class CreateRequestObjects < ActiveRecord::Migration[6.1]
   def change
     create_table :request_objects do |t|
       t.text :jwt_string

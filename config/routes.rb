@@ -3,24 +3,35 @@
 # 単数形の resource コマンドでも、コントローラ名が複数形になってしまう。
 # => controller: オプションでクラス名を指定すればよい. 
 Rails.application.routes.draw do
+  # Log out
   resource :session,   only: :destroy
+
   resource :dashboard, only: :show
 
   # Relying Party (RP) - テナントにぶら下がる
   resources :clients, except: :show
 
-  # テナントにぶら下がる
-  resources :authorizations, only: [:new, :create]
-
   # テナントユーザのログインのため
   namespace :connect do
-    resource :facebook, only: :show
+    resource :facebook, only: [:show], controller: 'facebook' 
 
     # Client (RP) として接続
-    resource :google,   only: [:create, :show]
+    resource :google, only: [:create, :show], controller: 'google'
 
-    resource :client,   only: :create
+    # Relying Party (RP) の動的登録
+    # Spec: OpenID Connect Dynamic Client Registration 1.0
+    # -> これが必要になるユースケースが全く思い当たらない。
+    # Google も Azure AD もサポートしていない。
+    # -> この人も同意見
+    #    https://oauth.jp/blog/2016/02/24/is-openid-connect-far-from-oauth2/
+    #resource :client,   only: :create
   end
+
+  # 払い出されるユーザ
+  resources :fake_users
+
+  # テナントにぶら下がる
+  resources :authorizations, only: [:new, :create]
 
   root to: 'top#index'
 

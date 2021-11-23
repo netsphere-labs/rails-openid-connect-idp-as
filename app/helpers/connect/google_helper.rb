@@ -1,2 +1,0 @@
-module Connect::GoogleHelper
-end

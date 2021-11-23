@@ -1,3 +1,6 @@
+# -*- coding:utf-8 -*-
+
+# 払い出されるユーザ
 class FakeUsersController < ApplicationController
   before_action :set_fake_user, only: %i[ show edit update destroy ]
 

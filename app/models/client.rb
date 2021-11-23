@@ -1,13 +1,13 @@
 # -*- coding:utf-8 -*-
 
 # Relying Party (RP) を保存する
-class Client < ActiveRecord::Base
+class Client < ApplicationRecord
   [:contacts, :redirect_uris, :raw_registered_json].each do |serializable|
     serialize serializable, JSON
   end
 
-  # 'developer' account が client を所有する.
-  # 通常, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.
+  # 'developer' account が client を所有する. => テナントの位置づけ
+  # 通常は, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.
   belongs_to :account
   
   has_many :access_tokens
@@ -93,7 +93,7 @@ class Client < ActiveRecord::Base
     hash
   end
 
-  private
+private
 
   def setup
     self.identifier = SecureRandom.hex(16)

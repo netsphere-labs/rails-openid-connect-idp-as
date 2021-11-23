@@ -12,10 +12,10 @@ require 'faker'
 
 10.times do |i| # 0始まり
   locale = case i
-           when 0..2; 'en_GB'
-           when 3..5; 'ja_JP'
-           when 6..7; 'zh_TW'
-           when 8..9; 'fr_FR'
+           when 0..2; 'en-GB'
+           when 3..5; 'ja'
+           when 6..7; 'zh-TW'
+           when 8..9; 'fr'
            end
   Faker::Config.locale = locale
 

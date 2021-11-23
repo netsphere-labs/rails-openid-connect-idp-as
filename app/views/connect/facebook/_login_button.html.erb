@@ -1,22 +1,14 @@
 
-<% content_for :top do %>
+<% content_for :body_connect_fb do %>
 <script>
 window.fbAsyncInit = function() {
     FB.init({
       appId:   '<%= Connect::Facebook.config[:client_id] %>',
       cookie:  true,
       xfbml:   true,
-      version: 'v7.0'
+      version: 'v12.0'
     });
   };
-
-(function(d, s, id) {                      // Load the SDK asynchronously
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
 </script>
 <% end %>
 
@@ -27,3 +19,5 @@ window.fbAsyncInit = function() {
                  onlogin="location.href = '<%= connect_facebook_path %>';">
 </fb:login-button>
 
+<!-- Load the JS SDK asynchronously -->
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>

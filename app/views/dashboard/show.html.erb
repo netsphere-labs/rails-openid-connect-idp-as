@@ -1,28 +1,26 @@
-<section>
-  <h2><%= 'dashboard.title'.t %></h2>
 
-  <p>Account: <%= @account.inspect %>
-  <p>Connect::Facebook: <%= @account.facebook.inspect %>
-    
+<h1><%= t('dashboard.title') %></h1>
+
+<section>
   <%= render @clients %>
 </section>
 
 <nav>
   <p>
-    <%= link_to 'clients.new.title'.t, new_client_path %>
+    <%= link_to t('clients.new.title'), new_client_path %>
   </p>
 </nav>
 
 <aside class="help">
-  <h3><%= 'help.title'.t %></h3>
+  <h3><%= t('help.title') %></h3>
   <details>
-    <summary><%= 'endpoint.help'.t %></summary>
+    <summary><%= t('endpoint.help') %></summary>
     <dl>
-      <dt><%= 'endpoint.authorization'.t %></dt>
+      <dt><%= t('endpoint.authorization') %></dt>
       <dd><%= new_authorization_url %></dd>
-      <dt><%= 'endpoint.token'.t %></dt>
+      <dt><%= t('endpoint.token') %></dt>
       <dd><%= access_tokens_url %></dd>
-      <dt><%= 'endpoint.userinfo'.t %></dt>
+      <dt><%= t('endpoint.userinfo') %></dt>
       <dd><%= user_info_url %></dd>
     </dl>
   </details>

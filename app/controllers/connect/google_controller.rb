@@ -2,20 +2,27 @@
 
 # Google に対して client (RP) として接続
 class Connect::GoogleController < ApplicationController
-  before_filter :require_anonymous_access
 
   # googleから戻ってくる
+  # GET /connect/google or /connect/google.json
   # Authorization Code Flow でも, GET method.
   def show
     if params[:code].blank? || session[:state] != params[:state]
       raise AuthenticationRequired.new
     end
-    authenticate Connect::Google.authenticate(params[:code])
-    logged_in!
+
+    # login() 内部で user_class.authenticate(*credentials) が呼び出される
+    if login(Connect::Google, params[:code])  
+      redirect_back_or_to('/dashboard', notice: 'Login successful')
+    else
+      flash[:alert] = 'Login failed'
+      redirect_to '/'
+    end
   end
 
 
   # [POST] 認証開始 => googleにリダイレクト
+  # POST /connect/google or /connect/google.json
   def create
     session[:state] = SecureRandom.hex(32)
     session[:nonce] = SecureRandom.hex(32)

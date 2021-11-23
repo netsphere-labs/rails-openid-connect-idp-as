@@ -8,6 +8,7 @@ class Connect::Facebook < Connect::Base
     @me ||= FbGraph2::User.me(self.access_token).fetch
   end
 
+=begin
   def userinfo
     attributes = {
       id:       identifier,
@@ -22,6 +23,7 @@ class Connect::Facebook < Connect::Base
     attributes[:gender] = me.gender if ['male', 'female'].include?(me.gender)
     OpenIDConnect::ResponseObject::UserInfo.new attributes
   end
+=end
 
   class << self
     def config
@@ -49,7 +51,12 @@ class Connect::Facebook < Connect::Base
       # fb_graph2 では, from_cookie() 内で, SignedRequest の検証を自動的に行う.
       # client_secret のハッシュ値との比較。
       # => なので, client_secret が必要。
-      _auth_ = auth.from_cookie(cookies)
+      begin
+        _auth_ = auth.from_cookie(cookies)
+      rescue FbGraph2::Auth::SignedRequest::VerificationFailed
+        # ユーザが [キャンセル] を押した場合
+        return [nil, :user_canceled]
+      end
       print _auth_.inspect # DEBUG
       connect = find_or_initialize_by(identifier: _auth_.user.identifier)
       print connect.inspect # DEBUG

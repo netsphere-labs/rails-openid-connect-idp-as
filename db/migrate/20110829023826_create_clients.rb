@@ -1,14 +1,14 @@
 # -*- coding:utf-8 -*-
 
 # Relying Party (RP) テーブル
-class CreateClients < ActiveRecord::Migration
+class CreateClients < ActiveRecord::Migration[4.2]
   def self.up
     create_table :clients do |t|
       t.belongs_to :account
+      t.string :name,        null:false
+      t.string :identifier,  null:false
       t.string(
-        :identifier,
         :secret,
-        :name,
         :jwks_uri,
         :sector_identifier,
         :redirect_uris  # 配列

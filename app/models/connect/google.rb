@@ -6,6 +6,7 @@ class Connect::Google < Connect::Base
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
 
+=begin
   def userinfo
     unless @userinfo
       hash = call_api self.class.config[:userinfo_endpoint]
@@ -13,6 +14,7 @@ class Connect::Google < Connect::Base
     end
     @userinfo
   end
+=end
 
   private
 

@@ -11,11 +11,14 @@ class ClientsController < ApplicationController
     @redirect_uris = ['']
   end
 
+
+  # GET /clients/1/edit
   def edit
     @client = current_account.clients.find(params[:id])
     @redirect_uris = @client.redirect_uris
   end
-  
+
+
   def create
     @client = current_account.clients.new(client_params.permit(:name))
     @redirect_uris = client_params.permit(redirect_uris: [])[:redirect_uris]
@@ -35,7 +38,6 @@ class ClientsController < ApplicationController
 
   # PATCH/PUT /clients/1 or /clients/1.json
   def update
-    @client = current_account.clients.find(params[:id])
     @redirect_uris = client_params.permit(redirect_uris: [])[:redirect_uris]
 
     @client.attributes = client_params.permit(:name)

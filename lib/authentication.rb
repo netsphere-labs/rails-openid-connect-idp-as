@@ -1,3 +1,7 @@
+
+# 特徴的なメソッド名
+# --> https://github.com/smooki/letmein/ かな?
+#     Rails 3用
 module Authentication
 
   class AuthenticationRequired < StandardError; end
