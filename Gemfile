@@ -102,4 +102,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # 元の版は https://github.com/smooki/letmein/ を使っていたようだが、さすがに古
 # い.
-gem 'sorcery'
+# CVE-2020-11052:  Sorcery before 0.15.0.
+gem 'sorcery', '>= 0.16.1'
