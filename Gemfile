@@ -44,7 +44,8 @@ gem 'validate_email'
 #   - https://github.com/arsduo/koala
 gem 'fb_graph2'
 
-gem 'rack-oauth2'
+# v1.13 から rack >= 2.1.0. Rails 4.2 と互換性がない。
+gem 'rack-oauth2', '~> 1.12.0'
 
 # depends on json, validate_email, validate_url, webfinger, ...
 # バグ修正が config/initializers 以下にある
