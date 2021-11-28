@@ -1,9 +1,10 @@
-<h1><%= t('clients.new.title') %></h1>
+<h1>New Client (RP)</h1>
 
 <article>
   <%= form_for @client do |f| %>
     <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
                                f: f %>
-    <%= f.submit %>
+    <%= link_to 'Cancel', '/dashboard' %> <%= f.submit %>
   <% end %>
 </article>
+

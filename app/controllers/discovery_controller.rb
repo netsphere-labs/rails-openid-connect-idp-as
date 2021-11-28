@@ -2,8 +2,10 @@ class DiscoveryController < ApplicationController
   def show
     case params[:id]
     when 'webfinger'
+      # /.well-known/webfinger
       webfinger_discovery
     when 'openid-configuration'
+      # /.well-known/openid-configuration
       openid_configuration
     else
       raise HttpError::NotFound

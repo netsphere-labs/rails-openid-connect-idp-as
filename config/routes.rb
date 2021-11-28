@@ -4,9 +4,9 @@
 # => controller: オプションでクラス名を指定すればよい. 
 Rails.application.routes.draw do
   # Log out
-  resource :session,   only: :destroy
-
-  resource :dashboard, only: :show
+  delete 'session', to: 'session#destroy'
+  
+  get 'dashboard', to: 'dashboard#show'
 
   # Relying Party (RP) - テナントにぶら下がる
   resources :clients, except: :show

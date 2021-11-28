@@ -93,8 +93,10 @@ class Client < ApplicationRecord
     hash
   end
 
+
 private
 
+  # For before_validation
   def setup
     self.identifier = SecureRandom.hex(16)
     self.secret     = SecureRandom.hex(32)

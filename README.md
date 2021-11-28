@@ -1,8 +1,8 @@
-# OpenIDConnect Sample
+# OpenIDConnectOp Sample
 
 A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem.
 
-Ruby on Rails. See https://www.nslabs.jp/digital-identity.rhtml
+Ruby on Rails 6.1. See https://www.nslabs.jp/digital-identity.rhtml
 
 
 ## Resources

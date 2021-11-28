@@ -2,11 +2,17 @@
 
 # クライアント (RP) の管理
 class ClientsController < ApplicationController
-  before_filter :require_authentication
+  before_action :require_login
+
+  before_action :set_client, only: %i[ show edit update destroy ]
+
+  # GET /clients/1 or /clients/1.json
+  def show
+  end
 
   # GET /clients/new
   def new
-    @client = current_account.clients.new
+    @client = Client.new
     # redirect_uri は複数持てる.
     @redirect_uris = ['']
   end
@@ -14,13 +20,14 @@ class ClientsController < ApplicationController
 
   # GET /clients/1/edit
   def edit
-    @client = current_account.clients.find(params[:id])
     @redirect_uris = @client.redirect_uris
   end
 
 
+  # POST /clients or /clients.json
   def create
-    @client = current_account.clients.new(client_params.permit(:name))
+    @client = Client.new(client_params.permit(:name))
+    @client.account_id = current_user.id
     @redirect_uris = client_params.permit(redirect_uris: [])[:redirect_uris]
     
     @client.redirect_uris = @redirect_uris.select do |uri|
@@ -28,14 +35,14 @@ class ClientsController < ApplicationController
                             end
     if @client.save
       redirect_to dashboard_url, flash: {
-        notice: "Registered #{@client.name}"
-      }
+                    notice: "Client #{@client.name} was successfully created." }
     else
-      flash[:error] = @client.errors.full_messages.to_sentence
-      render :new
+      flash[:alert] = @client.errors.full_messages.to_sentence
+      render :new, status: :unprocessable_entity 
     end
   end
 
+  
   # PATCH/PUT /clients/1 or /clients/1.json
   def update
     @redirect_uris = client_params.permit(redirect_uris: [])[:redirect_uris]
@@ -46,24 +53,29 @@ class ClientsController < ApplicationController
                             end
     if @client.save
       redirect_to dashboard_url, flash: {
-        notice: "Updated #{@client.name}"
-      }
+                    notice: "Client #{@client.name} was successfully updated." }
     else
-      flash[:error] = @client.errors.full_messages.to_sentence
-      render :edit
+      flash[:alert] = @client.errors.full_messages.to_sentence
+      render :edit, status: :unprocessable_entity
     end
   end
 
+
   # DELETE /clients/1 or /clients/1.json
   def destroy
-    current_account.clients.find(params[:id]).destroy
-    redirect_to dashboard_url
+    @client.destroy
+    redirect_to dashboard_url, flash: {
+                  notice: "Client #{@client.name} was successfully destroyed." }
   end
 
 private ###################################################################
-  
-  # Never trust parameters from the scary internet, only allow the white
-  # list through.
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_client
+    @client = current_user.clients.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
   def client_params
     params.fetch(:client, {})
   end
