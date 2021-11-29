@@ -1,9 +1,10 @@
+
 class DashboardController < ApplicationController
-  before_filter :require_authentication
+  before_action :require_login
 
   def show
-    @account = current_account
-    @clients = current_account.clients
+    @account = current_user
+    @clients = @account.clients
     print Connect::Facebook.all.inspect  # DEBUG
   end
 end

@@ -20,7 +20,11 @@ Rails.application.routes.draw do
 
     # Relying Party (RP) の動的登録
     # Spec: OpenID Connect Dynamic Client Registration 1.0
+    #       https://openid.net/specs/openid-connect-registration-1_0.html
     # -> これが必要になるユースケースが全く思い当たらない。
+    # 関連仕様:
+    #   RFC 7591 (July 2015) OAuth 2.0 Dynamic Client Registration Protocol
+    #      -> Appendix A.  Use Cases があるが、でも、必要かな?
     # Google も Azure AD もサポートしていない。
     # -> この人も同意見
     #    https://oauth.jp/blog/2016/02/24/is-openid-connect-far-from-oauth2/

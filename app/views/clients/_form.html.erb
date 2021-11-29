@@ -17,19 +17,25 @@
   <% end %>
 
 
-<div>
-  <%= f.label :name %>
-  <%= f.text_field :name %>
+<div class="uk-margin">
+  <%= f.label :name, :class => 'uk-form-label' %>
+  <div class="uk-form-controls">
+    <%= f.text_field :name, :class => 'uk-input' %>
+  </div>
 </div>
 
 <% redirect_uris.each do |redirect_uri| %>
-<div>
-  <%= f.label :redirect_uri %>
-  <%= url_field_tag 'client[redirect_uris][]', redirect_uri %>
+<div class="uk-margin">
+  <%= f.label :redirect_uri, :class => 'uk-form-label' %>
+  <div class="uk-form-controls">
+    <%= url_field_tag 'client[redirect_uris][]', redirect_uri, :class => 'uk-input' %>
+  </div>
 </div>
 <% end %>
 
-<div>
-  <%= f.label :redirect_uri %>
-  <%= url_field_tag 'client[redirect_uris][]', '' %>
+<div class="uk-margin">
+  <%= f.label :redirect_uri, :class => 'uk-form-label' %>
+  <div class="uk-form-controls">
+    <%= url_field_tag 'client[redirect_uris][]', '', :class => 'uk-input' %>
+  </div>
 </div>

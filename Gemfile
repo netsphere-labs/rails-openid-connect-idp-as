@@ -19,15 +19,7 @@ gem 'pg'
 
 # Use SCSS for stylesheets
 # 'Ruby Sass' has reached EOL and should no longer be used.
-#gem 'sass-rails', '~> 5.0'
-
-# Use Uglifier as compressor for JavaScript assets
-# OSVDB-126747 fix.
-#gem 'uglifier', '>= 2.7.2'
-
-# Use jquery as the JavaScript library
-# CVE-2019-11358 fix.
-#gem 'jquery-rails', '>= 4.3.4'
+#gem 'sass-rails', '>= 6'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 5.0'

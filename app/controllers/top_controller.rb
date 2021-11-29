@@ -1,6 +1,8 @@
 class TopController < ApplicationController
-  before_filter :require_anonymous_access
 
   def index
+    if current_user
+      redirect_to '/dashboard'
+    end
   end
 end

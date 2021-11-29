@@ -26,3 +26,4 @@ class Scope < ApplicationRecord
   #include ConstantCache
   #caches_constants
 end
+

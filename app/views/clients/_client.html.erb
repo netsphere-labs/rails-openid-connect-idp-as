@@ -27,9 +27,9 @@
       </ul>
     </nav>
     <footer>
-      <%= link_to t('edit'), edit_client_path(client) %>
+      <%= link_to 'Edit...', edit_client_path(client) %>
       <%= link_to t('destroy'), client_path(client), 
-                  class: 'destroy', method: :delete %>
+                  method: :delete, data:{confirm:'Are you sure?'} %>
     </footer>
   </details>
 </article>

@@ -1,4 +1,5 @@
-class IdToken < ActiveRecord::Base
+
+class IdToken < ApplicationRecord
   belongs_to :account
   belongs_to :client
   has_one :id_token_request_object

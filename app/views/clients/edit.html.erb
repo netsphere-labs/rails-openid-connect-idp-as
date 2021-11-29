@@ -1,7 +1,7 @@
 <h1><%= t('clients.edit.title') %></h1>
 
 <article>
-  <%= form_for @client, :method => :put do |f| %>
+  <%= form_for @client, :method => :put, :html => {:class => 'uk-form-horizontal'} do |f| %>
     <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
                                f: f %>
     <%= link_to 'Cancel', '/dashboard' %> <%= f.submit %>

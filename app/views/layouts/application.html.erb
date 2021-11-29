@@ -3,28 +3,75 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title><%= 'site.title'.t %> - <%= 'site.description'.t %></title>
-    
-  <link rel="stylesheet" href="/stylesheets/layout.css" />
-  <%= stylesheet_link_tag    'application', media: 'all' %>
-  <%= stylesheet_link_tag params[:controller] %>
-  <%= javascript_include_tag 'application' %>
+  <title>OpenidConnectOpSample</title>
 
   <%= csrf_meta_tags %>
-    <%= apple_app_capable_meta_tag %>
-    <%= apple_app_icon_link_tag %>
-</head>
-<%= content_tag :body, class: controller_name do %>
-    <%= yield :top %>
-    <%= render 'layouts/header' %>
+  <%= csp_meta_tag %>
 
-<p><%= flash[:notice] %>
-<p><%= flash[:error] %>
-    
-    <div class="main">
-      <%= yield %>
-    </div>
-    <%= render 'layouts/footer' %>
-    <%= yield :bottom %>
+  <link rel="stylesheet" href="/uikit3/css/uikit.min.css" />
+  <script src="/uikit3/js/uikit.min.js"></script>
+  <script src="/uikit3/js/uikit-icons.min.js"></script>
+        
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_pack_tag 'application' %>
+</head>
+<body>
+  <%= yield :body_connect_fb %>
+
+<nav class="uk-navbar-container" uk-navbar>
+  <div class="uk-navbar-left">
+    <ul class="uk-navbar-nav">
+      <li class="uk-active"><a href=""></a></li>
+      <li class="uk-parent"><a href=""></a></li>
+      <li><a href=""></a></li>
+    </ul>
+  </div>
+  <div class="uk-navbar-right">
+    <%= current_user.inspect %>
+  </div>
+</nav>
+
+<p><%= t('site.description') %></p>
+
+<% if (str = flash[:notice]) %>
+<div class="uk-alert-success" uk-alert>
+  <a class="uk-alert-close" uk-close></a>
+  <p><%= str %>
+</div>
+<% end %>
+<% if (str = flash[:alert]) %>
+<div class="uk-alert-danger" uk-alert>
+  <a class="uk-alert-close" uk-close></a>
+  <p><%= str %>
+</div>
+<% end %>
+
+    <%= yield %>
+
+<footer class="page_footer">
+  <% if current_user %>
+    <%= form_tag session_path, method: :delete do  %>
+      <%= submit_tag t('Logout') %>
+    <% end %>
   <% end %>
+  <ul>
+    <li>
+      <%= link_to 'OpenID Connect RubyGem', 'https://github.com/nov/openid_connect/' %>
+    </li>
+    <li>
+      This ConnectOpSample (
+        <%= link_to 'GitHub', 'https://github.com/netsphere-labs/openid_connect_sample/' %>
+      )
+    </li>
+    <li>
+      Nov's RP (
+        <%= link_to 'GitHub', 'https://github.com/nov/openid_connect_sample_rp' %>
+      )
+    </li>
+    <li>
+      <small>&copy; <%= link_to 'nov matake', 'https://github.com/nov'%></small>
+    </li>
+  </ul>
+</footer>
+</body>
 </html>

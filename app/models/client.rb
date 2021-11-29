@@ -33,7 +33,12 @@ class Client < ApplicationRecord
 
   class << self
     def available_response_types
-      ['code', 'token', 'id_token', 'code token', 'code id_token', 'id_token token', 'code id_token token']
+      ['code',               # Authorization Code Flow
+       'id_token token',     # Implicit Flow
+       'code token',         # Hybrid Flow
+       'code id_token',      # Hybrid Flow
+       'code id_token token' # Hybrid Flow
+      ]
     end
 
     def available_grant_types

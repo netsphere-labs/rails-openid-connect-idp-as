@@ -1,14 +1,29 @@
+# -*- coding:utf-8 -*-
+
 class DiscoveryController < ApplicationController
   def show
     case params[:id]
     when 'webfinger'
-      # /.well-known/webfinger
+      # GET /.well-known/webfinger
+      # spec: OpenID Connect Discovery 1.0
+      #       https://openid.net/specs/openid-connect-discovery-1_0.html
+      # -> issuer を得るためのもの。
       webfinger_discovery
     when 'openid-configuration'
-      # /.well-known/openid-configuration
+      # <issuer>/.well-known/openid-configuration
       openid_configuration
     else
-      raise HttpError::NotFound
+      #raise HttpError::NotFound
+      # render status: 404 とか、いろんな解説があるが、はて。
+      # 次とする解説が多いが, 実は捕捉できていない。
+      #    rescue_from ActionController::RoutingError, with:メソッド名
+      
+      # これが正解. 単に投げればよい. 引数は message, failures = []
+      # production 環境では, 自動的に 404 にしてくれる。
+      # ActiveRecord::RecordNotFound も同様。
+      # See https://github.com/rails/rails/blob/6-1-stable/actionpack/lib/action_dispatch/middleware/exception_wrapper.rb
+      #     https://github.com/rails/rails/blob/6-1-stable/activerecord/lib/active_record/railtie.rb
+      raise ActionController::RoutingError.new('unknown ' + params[:id])
     end
   end
 
@@ -22,7 +37,8 @@ class DiscoveryController < ApplicationController
       }]
     }
     jrd[:subject] = params[:resource] if params[:resource].present?
-    render json: jrd, content_type: Mime::JRD
+    # config/initializers/mime_types.rb で定義。Rails5 で書き方が変わった
+    render json: jrd, content_type: Mime[:jrd]
   end
 
   def openid_configuration
@@ -32,7 +48,7 @@ class DiscoveryController < ApplicationController
       token_endpoint: access_tokens_url,
       userinfo_endpoint: user_info_url,
       jwks_uri: IdToken.config[:jwks_uri],
-      registration_endpoint: connect_client_url,
+      #registration_endpoint: connect_client_url,
       scopes_supported: Scope.all.collect(&:name),
       response_types_supported: Client.available_response_types,
       grant_types_supported: Client.available_grant_types,
