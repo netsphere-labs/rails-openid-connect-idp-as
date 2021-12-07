@@ -2,7 +2,7 @@
 
 # Token Endpoint
 # The Authorization Code Flow: アクセストークンと id token の二つを返す.
-class AccessTokensController < ApplicationController
+class TokensController < ApplicationController
   protect_from_forgery with: :null_session
   
   # POST /access_tokens
@@ -45,7 +45,7 @@ private
     end
   end
   
-end # class AccessTokensController
+end # class TokensController
 
 module Rack
   module OAuth2
