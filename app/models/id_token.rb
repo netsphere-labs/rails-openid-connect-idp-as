@@ -1,14 +1,20 @@
+# -*- coding:utf-8 -*-
 
 class IdToken < ApplicationRecord
-  belongs_to :account
+  # 払い出すユーザ
+  #belongs_to :account
+  belongs_to :fake_user
+  # RP
   belongs_to :client
+
   has_one :id_token_request_object
   has_one :request_object, through: :id_token_request_object
 
   before_validation :setup, on: :create
 
-  validates :account, presence: true
-  validates :client,  presence: true
+  #validates :account, presence: true
+  validates :fake_user, presence: true
+  validates :client,    presence: true
 
   scope :valid, lambda {
     where { expires_at >= Time.now.utc }
@@ -16,10 +22,10 @@ class IdToken < ApplicationRecord
 
   def to_response_object(with = {})
     subject = if client.ppid?
-      account.ppid_for(client.sector_identifier).identifier
-    else
-      account.identifier
-    end
+                fake_user.ppid_for(client.sector_identifier).identifier
+              else
+                fake_user.identifier
+              end
     claims = {
       iss: self.class.config[:issuer],
       sub: subject,
@@ -50,7 +56,8 @@ class IdToken < ApplicationRecord
     end
   end
 
-  private
+
+private
 
   def required?(claim)
     request_object.try(:to_request_object).try(:id_token).try(:required?, claim)

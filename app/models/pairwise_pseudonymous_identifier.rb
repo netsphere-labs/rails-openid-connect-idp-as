@@ -1,4 +1,4 @@
-class PairwisePseudonymousIdentifier < ActiveRecord::Base
+class PairwisePseudonymousIdentifier < ApplicationRecord
   belongs_to :account
   belongs_to :client
 

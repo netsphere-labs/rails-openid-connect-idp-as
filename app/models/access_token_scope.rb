@@ -1,4 +1,4 @@
-class AccessTokenScope < ActiveRecord::Base
+class AccessTokenScope < ApplicationRecord
   belongs_to :access_token
   belongs_to :scope
 

@@ -1,8 +1,13 @@
+# -*- coding:utf-8 -*-
 
 # クライアント (RP) からの認証
 class Authorization < ApplicationRecord
-  belongs_to :account
+  # RP
   belongs_to :client
+  # 払い出すユーザ
+  #belongs_to :account
+  belongs_to :fake_user
+  
   has_many :authorization_scopes
   has_many :scopes, through: :authorization_scopes
   has_one :authorization_request_object
@@ -10,8 +15,9 @@ class Authorization < ApplicationRecord
 
   before_validation :setup, on: :create
 
-  validates :account,    presence: true
   validates :client,     presence: true
+  #validates :account,    presence: true
+  validates :fake_user,  presence: true
   validates :code,       presence: true, uniqueness: true
   validates :expires_at, presence: true
 
@@ -32,7 +38,8 @@ class Authorization < ApplicationRecord
     given_uri == redirect_uri
   end
 
-  private
+
+private
 
   def setup
     self.code       = SecureRandom.hex(32)
@@ -40,7 +47,7 @@ class Authorization < ApplicationRecord
   end
 
   def generate_access_token!
-    token = account.access_tokens.create!(client: client)
+    token = AccessToken.create!(client: client, fake_user: fake_user)
     token.scopes << scopes
     token.request_object = request_object
     token

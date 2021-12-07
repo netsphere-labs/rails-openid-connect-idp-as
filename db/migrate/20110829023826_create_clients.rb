@@ -7,8 +7,8 @@ class CreateClients < ActiveRecord::Migration[4.2]
       t.belongs_to :account
       t.string :name,        null:false
       t.string :identifier,  null:false
+      t.string :secret,      null:false
       t.string(
-        :secret,
         :jwks_uri,
         :sector_identifier,
         :redirect_uris  # 配列

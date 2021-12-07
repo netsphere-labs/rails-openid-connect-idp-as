@@ -1,4 +1,4 @@
-class IdTokenRequestObject < ActiveRecord::Base
+class IdTokenRequestObject < ApplicationRecord
   belongs_to :id_token
   belongs_to :request_object
 

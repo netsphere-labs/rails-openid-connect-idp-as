@@ -1,6 +1,12 @@
-class AccessToken < ActiveRecord::Base
-  belongs_to :account
+# -*- coding:utf-8 -*-
+
+class AccessToken < ApplicationRecord
+  # RP
   belongs_to :client
+  # 払い出すユーザ
+  #belongs_to :account
+  belongs_to :fake_user
+  
   has_many :access_token_scopes
   has_many :scopes, through: :access_token_scopes
   has_one :access_token_request_object
@@ -35,7 +41,8 @@ class AccessToken < ActiveRecord::Base
     end
   end
 
-  private
+
+private
 
   def setup
     self.token      = SecureRandom.hex(32)

@@ -6,7 +6,7 @@ class Client < ApplicationRecord
     serialize serializable, JSON
   end
 
-  # 'developer' account が client を所有する. => テナントの位置づけ
+  # 'admin' account が client を所有する. => テナントの位置づけ
   # 通常は, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.
   belongs_to :account
   

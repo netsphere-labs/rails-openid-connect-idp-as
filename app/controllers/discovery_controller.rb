@@ -27,7 +27,8 @@ class DiscoveryController < ApplicationController
     end
   end
 
-  private
+
+private
 
   def webfinger_discovery
     jrd = {
@@ -45,7 +46,7 @@ class DiscoveryController < ApplicationController
     config = OpenIDConnect::Discovery::Provider::Config::Response.new(
       issuer: IdToken.config[:issuer],
       authorization_endpoint: new_authorization_url,
-      token_endpoint: access_tokens_url,
+      token_endpoint: tokens_url,
       userinfo_endpoint: user_info_url,
       jwks_uri: IdToken.config[:jwks_uri],
       #registration_endpoint: connect_client_url,

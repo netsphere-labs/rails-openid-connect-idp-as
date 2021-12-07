@@ -3,13 +3,17 @@
 # 単数形の resource コマンドでも、コントローラ名が複数形になってしまう。
 # => controller: オプションでクラス名を指定すればよい. 
 Rails.application.routes.draw do
+
+  # 管理者用機能 #################################################
+  
   # Log out
   delete 'session', to: 'session#destroy'
-  
+
+  # List of RP
   get 'dashboard', to: 'dashboard#show'
 
   # Relying Party (RP) - テナントにぶら下がる
-  resources :clients, except: :show
+  resources :clients
 
   # テナントユーザのログインのため
   namespace :connect do
@@ -31,8 +35,11 @@ Rails.application.routes.draw do
     #resource :client,   only: :create
   end
 
-  # 払い出されるユーザ
+  # 払い出されるユーザ ###########################################
+  
   resources :fake_users
+
+  # IdP 機能 #####################################################
 
   # テナントにぶら下がる
   resources :authorizations, only: [:new, :create]
@@ -41,10 +48,14 @@ Rails.application.routes.draw do
 
   # 'webfinger', 'openid-configuration'
   get   '.well-known/:id', to: 'discovery#show'
-  
+
+  # Token Endpoint
+  # The Authorization Code Flow: アクセストークンと id token を返す.
+  post  'access_tokens', to: 'tokens#index'
+
+  # UserInfo Endpoint
   match 'user_info',       to: 'user_info#show', :via => [:get, :post]
 
-  post  'access_tokens', to: proc { |env| TokenEndpoint.new.call(env) }
   get   'jwks.json',     to: proc { |env| 
                                 [200, 
                                  {'Content-Type' => 'application/json'}, 

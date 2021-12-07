@@ -1,4 +1,4 @@
-class AuthorizationRequestObject < ActiveRecord::Base
+class AuthorizationRequestObject < ApplicationRecord
   belongs_to :authorization
   belongs_to :request_object
 

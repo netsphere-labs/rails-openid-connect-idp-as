@@ -36,7 +36,7 @@ To see it in action right now:
 
 ### Requirements
 
- - Ruby on Rails v4.2
+ - Ruby on Rails v6.1
  - fb_graph2
  - openid_connect
 
@@ -49,13 +49,39 @@ To run this in development mode on your local machine:
 
 * Download (or fork or clone) this repo
 * `bundle install` (see "Note" section below if you get "pg"-gem-related problems)
-* `bundle exec rake db:create db:migrate db:seed`
+
+`config/database.yml.sample` ファイルを `config/database.yml` にコピーして、適宜編集。
+
+<pre>
+  # su postgres
+  $ createdb --owner rails --encoding utf-8 openid-connect-sample_dev
+</pre>
+
+<pre>
+  $ rails db:migrate
+  $ rails db:seed
+</pre>
+
   If you have SQLite installed, `db:create` is not needed.
 
 * modify `config/connect/id_token/issuer.yml` -- change `issuer` to `http://localhost:3000`
 ```
   $ <kbd>bundle exec rails server -p 3000</kbd>
 ```
+
+production 環境の場合は, 次のようにする.
+
+  $ RAILS_ENV=production bin/rails assets:precompile
+
+次のようなシェルスクリプトを作る
+
+```
+export g_client_id=クライアントid
+export g_client_secret=クライアントsecret
+RAILS_ENV=production passenger start
+```
+
+
 
 Facebook
    Copy `config/connect/facebook.yml` from `facebook.yml.sample`

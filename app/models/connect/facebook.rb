@@ -8,22 +8,6 @@ class Connect::Facebook < Connect::Base
     @me ||= FbGraph2::User.me(self.access_token).fetch
   end
 
-=begin
-  def userinfo
-    attributes = {
-      id:       identifier,
-      name:     me.name,
-      email:    me.email,
-      address:  me.location.try(:name),
-      profile:  me.link,
-      picture:  me.picture,
-      locale:   me.locale,
-      verified: me.verified
-    }
-    attributes[:gender] = me.gender if ['male', 'female'].include?(me.gender)
-    OpenIDConnect::ResponseObject::UserInfo.new attributes
-  end
-=end
 
   class << self
     def config

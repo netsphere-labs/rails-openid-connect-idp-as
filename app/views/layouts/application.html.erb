@@ -27,7 +27,10 @@
     </ul>
   </div>
   <div class="uk-navbar-right">
-    <%= current_user.inspect %>
+    Admin: <% if current_user %>
+      <%= current_user.identifier %>
+      Last login at <%= current_user.last_login_at %>
+    <% end %>
   </div>
 </nav>
 

@@ -47,12 +47,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 # 'caches_constants' class method that will cache lookup data
 # 2009年のv0.0.2 が最終。メンテナンスされていない。
-# バグ修正が app/models/scope.rb にある
 #gem 'constant_cache', '0.0.2'
-
-#gem 'html5_validators'
-gem 'validate_url'
-gem 'validate_email'
 
 # Facebook.
 # 2020年5月現在, 比較的最近までメンテナンスされているものは、次の2択:
@@ -63,30 +58,37 @@ gem 'fb_graph2'
 gem 'rack-oauth2'
 
 # depends on json, validate_email, validate_url, webfinger, ...
-# バグ修正が config/initializers 以下にある
-gem 'openid_connect', '~> 1.2.0'
+gem 'openid_connect', '~> 1.2'
 
 group :development, :test do
-  gem 'sqlite3', '~> 1.4'
-  #gem 'test-unit', '~> 3.0'
-  # A concurrent (multi-process) HTTP 1.1 server.
-  #gem 'puma'
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger 
+  # console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
-  # Access an IRB console on exception pages or by using <%= console %> in
-  # views
-  # v3.3 から rails5
+  # 払い出されるユーザを生成
+  gem 'faker'
+end
+
+group :development do
+  # Access an interactive console on exception pages or by calling 'console' 
+  # anywhere in the code.
   gem 'web-console', '>= 4.1.0'
+
+  # Display performance information such as SQL time and flame graphs for each request in your browser.
+  # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
+  gem 'rack-mini-profiler', '~> 2.0'
+  gem 'listen', '~> 3.3'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
 end
 
 group :test do
-  # A set of alternative runners for MiniTest.
-  #gem 'turn', :require => false
-end
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '>= 3.26'
 
-group :production do
-  # Rails v4.2 は pg v1.0.0 では動かない。非互換.
-  gem 'pg', '~> 1.2'
-  #gem 'rack-ssl', :require => 'rack/ssl'
+  gem 'selenium-webdriver'
+  # Easy installation and use of web drivers to run system tests with browsers
+  gem 'webdrivers'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

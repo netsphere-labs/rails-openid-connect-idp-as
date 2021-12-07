@@ -1,4 +1,7 @@
-<%= form_tag authorizations_path, class: action do %>
+<% # 二つの RP から並列にリダイレクトしてこれるようにするため, セッションに保存
+   # してはいけない.
+  %>
+
   <%= hidden_field_tag :client_id, client.identifier %>
   <%= hidden_field_tag :response_type, response_type %>
   <%= hidden_field_tag :scope, scopes.collect(&:name).join(' ') %>
@@ -7,6 +10,3 @@
   <%= hidden_field_tag :nonce, nonce %>
   <%= hidden_field_tag :request, _request_ %>
   <%= hidden_field_tag :request_uri, request_uri %>
-  <%= submit_tag "client.#{action}".t %>
-  <%= hidden_field_tag action, true %>
-<% end %>

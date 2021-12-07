@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Fake Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+<% @fake_users.each do |fake_user| %>
+    <tr>
+      <td><%= fake_user.name %>
+      <td><%= fake_user.email %>
+      <td><%= fake_user.address %>
+      <td><%= fake_user.profile %>
+      <td><%= fake_user.locale %>
+      <td><%= fake_user.phone_number %>
+
+        <td><%= link_to 'Show', fake_user %></td>
+        <td><%= link_to 'Edit', edit_fake_user_path(fake_user) %></td>
+        <td><%= link_to 'Destroy', fake_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Fake User...', new_fake_user_path %>

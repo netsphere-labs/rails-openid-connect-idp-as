@@ -18,12 +18,6 @@ class ClientsController < ApplicationController
   end
 
 
-  # GET /clients/1/edit
-  def edit
-    @redirect_uris = @client.redirect_uris
-  end
-
-
   # POST /clients or /clients.json
   def create
     @client = Client.new(client_params.permit(:name))
@@ -40,6 +34,12 @@ class ClientsController < ApplicationController
       flash[:alert] = @client.errors.full_messages.to_sentence
       render :new, status: :unprocessable_entity 
     end
+  end
+
+
+  # GET /clients/1/edit
+  def edit
+    @redirect_uris = @client.redirect_uris
   end
 
   
@@ -67,6 +67,7 @@ class ClientsController < ApplicationController
     redirect_to dashboard_url, flash: {
                   notice: "Client #{@client.name} was successfully destroyed." }
   end
+
 
 private ###################################################################
 

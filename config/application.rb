@@ -18,5 +18,13 @@ module OpenidConnectOpSample
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # The UserInfo Endpoint MUST accept Access Tokens as OAuth 2.0 Bearer Token
+    # Usage [RFC6750].
+    config.middleware.use Rack::OAuth2::Server::Resource::Bearer, 'OpenID Connect' do |req|
+      AccessToken.where('token = ? AND expires_at >= ?',
+                        req.access_token, Time.now.utc).take || req.invalid_token!
+    end
+
   end
 end

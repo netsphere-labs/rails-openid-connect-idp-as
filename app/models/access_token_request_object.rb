@@ -1,4 +1,4 @@
-class AccessTokenRequestObject < ActiveRecord::Base
+class AccessTokenRequestObject < ApplicationRecord
   belongs_to :access_token
   belongs_to :request_object
 

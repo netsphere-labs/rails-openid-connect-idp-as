@@ -1,4 +1,7 @@
-class AuthorizationScope < ActiveRecord::Base
+# -*- coding:utf-8 -*-
+
+# 中間テーブル
+class AuthorizationScope < ApplicationRecord
   belongs_to :authorization
   belongs_to :scope
 

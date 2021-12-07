@@ -6,17 +6,8 @@ class Connect::Google < Connect::Base
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
 
-=begin
-  def userinfo
-    unless @userinfo
-      hash = call_api self.class.config[:userinfo_endpoint]
-      @userinfo = OpenIDConnect::ResponseObject::UserInfo.new hash
-    end
-    @userinfo
-  end
-=end
 
-  private
+private
 
   def to_bearer_token
     Rack::OAuth2::AccessToken::Bearer.new(

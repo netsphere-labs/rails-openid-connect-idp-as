@@ -25,5 +25,10 @@ class Scope < ApplicationRecord
 
   #include ConstantCache
   #caches_constants
-end
+
+  ['openid', 'profile', 'email', 'address', 'phone'].each do |x|
+    const_set(x.upcase, find_by_name(x))
+  end
+
+end # class Scope
 
