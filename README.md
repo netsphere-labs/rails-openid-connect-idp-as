@@ -1,6 +1,6 @@
 # OpenIDConnectOp Sample
 
-A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem. The Authorization Code Flow.
+A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem. The Authorization Code Flow and the Implicit Flow.
 
 Ruby on Rails 6.1. See https://www.nslabs.jp/digital-identity.rhtml
 
@@ -58,13 +58,15 @@ To run this in development mode on your local machine:
   $ rails db:seed
 </pre>
 
-  5. Copy `config/connect/facebook.yml.sample` to `facebook.yml`. And Google's.
+ 5. Copy `config/connect/facebook.yml.sample` to `facebook.yml`. And Google's.
 
-   Set `client_id` and `client_secret`
+Set `client_id` and `client_secret`
+Sorcery による OpenID Connect Login, Facebook Login のサンプルを兼ねている。
 
-  6. Modify `config/connect/id_token/issuer.yml` -- change `issuer` value to `http://localhost:3000`
+  
+ 6. Modify `config/connect/id_token/issuer.yml` -- change `issuer` value to `http://localhost:3000`
 
-  7. Run!
+ 7. Run!
   
 ```
   $ bin/yarn
@@ -109,9 +111,6 @@ To see it in action right now:
    
 Point your browser at http://localhost:3000
 
-If you download and run [the sample RP server](https://connect-rp.herokuapp.com),
-you can have it use this OP (use `localhost:3000` in the "Discover" field).
-The two servers on localhost must run on different ports.
 
 Obviously, external servers will not be able to connect to an OP that is running on localhost.
 
@@ -121,8 +120,6 @@ Obviously, external servers will not be able to connect to an OP that is running
 To run it on a public server, the steps are the same as for localhost, except
 you will set `issuer` in the issuer.yml config file to your domain name.
 
-Once it's running, you can use [Nov's Sample RP on Heroku](https://connect-rp.herokuapp.com)
-to discover and connect to it.
 
 
 ## Notes
@@ -148,3 +145,4 @@ may be of help.
 ## Copyright
 
 Copyright (c) 2011 nov matake. See LICENSE for details.
+Copyright (c) 2021 Hisashi Horikawa.
