@@ -126,12 +126,13 @@ private
     # 'code id_token',      # Hybrid Flow
     # 'code id_token token' # Hybrid Flow
     response_types = Array(req.response_type)
+    fake_user = FakeUser.find params[:fake_user]
 
     if response_types.include? :code
       # Authentication Response では code (と state) しか返さない.
       # => この時点で, どのユーザか特定して保存が必要.
       authorization = Authorization.create!(
-                                fake_user: FakeUser.find(params[:fake_user]),
+                                fake_user: fake_user,
                                 client: @client,
                                 redirect_uri: res.redirect_uri,
                                 nonce: req.nonce)
@@ -148,8 +149,8 @@ private
 
     # 事前検査済みなので、これでよい.
     if response_types.include? :token
-      access_token = account.access_tokens.create!(client: @client)
-      access_token.scopes << scopes
+      access_token = AccessToken.create!(fake_user:fake_user, client:@client)
+      access_token.scopes << @scopes
       if @request_object
         access_token.create_access_token_request_object!(
           request_object: RequestObject.new(
@@ -161,7 +162,7 @@ private
     end
 
     if response_types.include? :id_token
-      _id_token_ = IdToken.create!(account: current_user,
+      _id_token_ = IdToken.create!(fake_user:fake_user,
                                    client: @client,
                                    nonce: req.nonce )
       if @request_object
