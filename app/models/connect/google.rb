@@ -72,6 +72,7 @@ private
       ))
     end
 
+
     def authenticate(code)
       # token の検証
       client.authorization_code = code
@@ -82,11 +83,18 @@ private
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
       connect.id_token = id_token
+
+      email = id_token.raw_attributes[:email]
+      account = connect.account || Account.find_by_email(email) ||
+                Account.new(email: email)
       Account.transaction do
-        connect.account || Account.create!(google: connect)
+        account.google = connect  # Facebook が先にあった場合
+        account.name = id_token.raw_attributes[:name]
+        account.save!
         connect.save!
       end
-      return connect.account
+      
+      return account
     end
   end # class << self
 

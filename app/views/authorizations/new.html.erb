@@ -37,8 +37,8 @@
 
   <%= render 'authorizations/form', common_params.merge(action: :approve) %>
 
-  <%= submit_tag t("client.deny"), name:'deny' %>
-  <%= submit_tag t("client.approve"), name:'approve' %>
+  <%= submit_tag "Deny", name:'deny', class:'uk-button uk-button-danger' %>
+  <%= submit_tag "Approve", name:'approve', class:'uk-button uk-button-primary' %>
 <% end %>
   
 </article>

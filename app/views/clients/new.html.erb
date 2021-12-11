@@ -4,7 +4,8 @@
   <%= form_for @client, :html => {:class => 'uk-form-horizontal'} do |f| %>
     <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
                                f: f %>
-    <%= link_to 'Cancel', '/dashboard' %> <%= f.submit %>
+    <%= link_to 'Cancel', '/dashboard', class:'uk-button uk-button-default' %>
+    <%= f.submit class:'uk-button uk-button-primary' %>
   <% end %>
 </article>
 

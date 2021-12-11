@@ -1,8 +1,14 @@
-<p id="notice"><%= notice %></p>
+
+<ul class="uk-breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><span></span></li>
+</ul>
 
 <h1>Fake Users</h1>
 
-<table>
+<%= link_to 'New Fake User...', new_fake_user_path %>
+
+<table class="uk-table uk-table-divider">
   <thead>
     <tr>
       <th colspan="3"></th>
@@ -20,13 +26,10 @@
       <td><%= fake_user.phone_number %>
 
         <td><%= link_to 'Show', fake_user %></td>
-        <td><%= link_to 'Edit', edit_fake_user_path(fake_user) %></td>
+        <td><%= link_to 'Edit...', edit_fake_user_path(fake_user) %></td>
         <td><%= link_to 'Destroy', fake_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Fake User...', new_fake_user_path %>

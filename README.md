@@ -53,6 +53,8 @@ To run this in development mode on your local machine:
   $ createdb --owner rails --encoding utf-8 openid-connect-sample_dev
 </pre>
 
+<p><kbd>rake db:migrate</kbd>, <kbd>rake db:seed</kbd> でもよい。
+
 <pre>
   $ rails db:migrate
   $ rails db:seed

@@ -1,9 +1,10 @@
-<h1><%= t('clients.edit.title') %></h1>
+<h1><%= 'Edit ' + @client.name %></h1>
 
 <article>
   <%= form_for @client, :method => :put, :html => {:class => 'uk-form-horizontal'} do |f| %>
     <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
                                f: f %>
-    <%= link_to 'Cancel', '/dashboard' %> <%= f.submit %>
+    <%= link_to 'Cancel', '/dashboard', class:'uk-button uk-button-default' %>
+    <%= f.submit class:'uk-button uk-button-primary' %>
   <% end %>
 </article>

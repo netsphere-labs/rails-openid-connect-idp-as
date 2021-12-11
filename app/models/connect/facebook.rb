@@ -4,8 +4,28 @@ class Connect::Facebook < Connect::Base
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
 
+  # @return [FbGraph2::User] ユーザによって許可されたデータ.
+  #         email も得られないことがあることに注意. Mandatory にできない。
+  # {
+  #   id: 略,
+  #   raw_attributes: {"name": 略, ...},
+  #   access_token: 略,
+  #   name: "堀川 久",
+  #   email: "hisashi.horikawa@gmail.com",
+  #   first_name: "久",
+  #   last_name: "堀川",
+  #   gender: "male",
+  #   birthday: Dateオブジェクト,
+  #   location: FbGraph2::Pageオブジェクト,
+  #   age_range: FbGraph2::Struct::AgeRangeオブジェクト
+  # }
+  # 言語が取れていない。
   def me
-    @me ||= FbGraph2::User.me(self.access_token).fetch
+    # どのようなフィールドがあるかは, グラフAPIを見よ.
+    # https://developers.facebook.com/docs/graph-api/
+    @me ||= FbGraph2::User.me(self.access_token).fetch(
+                fields:[:name, :email, :first_name, :last_name,
+                        :location, :languages, :gender, :birthday, :age_range])
   end
 
 
@@ -45,11 +65,20 @@ class Connect::Facebook < Connect::Base
       connect = find_or_initialize_by(identifier: _auth_.user.identifier)
       print connect.inspect # DEBUG
       connect.access_token = _auth_.access_token.access_token
-      Account.transaction do 
-        connect.account || Account.create!(facebook: connect)
+      if !connect.me.email
+        return [nil, :email_not_permitted]
+      end
+      
+      account = connect.account || Account.find_by_email(connect.me.email) ||
+                Account.new(email: connect.me.email)
+      Account.transaction do
+        account.facebook = connect  # Google が先にあった場合
+        account.name = connect.me.name
+        account.save!
         connect.save!
       end # transaction
-      return connect.account
+
+      return account
     end
   end
 

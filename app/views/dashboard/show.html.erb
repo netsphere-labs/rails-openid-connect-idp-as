@@ -1,15 +1,17 @@
 
 <h1><%= t('dashboard.title') %></h1>
 
-<section>
-  <%= render @clients %>
-</section>
-
 <nav>
   <p>
     <%= link_to t('clients.new.title'), new_client_path %>
   </p>
 </nav>
+
+<section>
+  <%= render @clients %>
+</section>
+
+
 
 <aside class="help">
   <h3><%= t('help.title') %></h3>
@@ -25,3 +27,4 @@
     </dl>
   </details>
 </aside>
+

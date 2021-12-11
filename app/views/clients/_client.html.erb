@@ -1,4 +1,4 @@
-<article class="client">
+<fieldset class="client">
   <h3>
     <%= client.name %>
     <span class="redirect_uris">(<%= client.redirect_uris.try(:join, ' ') %>)</span>
@@ -26,10 +26,10 @@
         <% end %>
       </ul>
     </nav>
-    <footer>
+  </details>
+  <footer>
       <%= link_to 'Edit...', edit_client_path(client) %>
       <%= link_to t('destroy'), client_path(client), 
                   method: :delete, data:{confirm:'Are you sure?'} %>
-    </footer>
-  </details>
-</article>
+  </footer>
+</fieldset>

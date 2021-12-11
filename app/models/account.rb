@@ -21,7 +21,9 @@ class Account < ApplicationRecord
 
   before_validation :setup, on: :create
 
-  validates :identifier, presence: true, uniqueness: true
+  #validates :identifier, presence: true, uniqueness: true
+  validates :name,  presence: true
+  validates :email, presence: true, uniqueness: true
 
   class << self
     # Sorcery login() から callback される.
@@ -39,6 +41,6 @@ class Account < ApplicationRecord
 private
 
   def setup
-    self.identifier = SecureRandom.hex(8)
+    #self.identifier = SecureRandom.hex(8)
   end
 end

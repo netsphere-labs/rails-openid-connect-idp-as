@@ -42,14 +42,15 @@ ActiveRecord::Schema.define(version: 2012_02_29_153919) do
   end
 
   create_table "accounts", id: :serial, force: :cascade do |t|
-    t.string "identifier", null: false
+    t.string "email", null: false
+    t.string "name", null: false
     t.datetime "last_login_at"
     t.datetime "last_logout_at"
     t.datetime "last_activity_at"
     t.string "last_login_from_ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["identifier"], name: "index_accounts_on_identifier", unique: true
+    t.index ["email"], name: "index_accounts_on_email", unique: true
   end
 
   create_table "authorization_request_objects", force: :cascade do |t|

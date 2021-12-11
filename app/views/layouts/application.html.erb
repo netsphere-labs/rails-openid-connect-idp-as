@@ -20,21 +20,23 @@
 
 <nav class="uk-navbar-container" uk-navbar>
   <div class="uk-navbar-left">
+    <%= t('site.description') %>
     <ul class="uk-navbar-nav">
-      <li class="uk-active"><a href=""></a></li>
-      <li class="uk-parent"><a href=""></a></li>
-      <li><a href=""></a></li>
+      <li class="uk-active"><a href="/fake_users/">Fake Users</a></li>
     </ul>
   </div>
   <div class="uk-navbar-right">
-    Admin: <% if current_user %>
-      <%= current_user.identifier %>
+    <% if current_user %>
+      Admin: <%= current_user.name %> &lt;<%= current_user.email %>&gt;
       Last login at <%= current_user.last_login_at %>
+      <%= form_tag session_path, method: :delete do  %>
+        <%= submit_tag 'Logout', class:'uk-button uk-button-secondary' %>
+      <% end %>
+    <% else %>
+      Not logged in  
     <% end %>
   </div>
 </nav>
-
-<p><%= t('site.description') %></p>
 
 <% if (str = flash[:notice]) %>
 <div class="uk-alert-success" uk-alert>
@@ -52,11 +54,6 @@
     <%= yield %>
 
 <footer class="page_footer">
-  <% if current_user %>
-    <%= form_tag session_path, method: :delete do  %>
-      <%= submit_tag t('Logout') %>
-    <% end %>
-  <% end %>
   <ul>
     <li>
       <%= link_to 'OpenID Connect RubyGem', 'https://github.com/nov/openid_connect/' %>
@@ -71,10 +68,10 @@
         <%= link_to 'GitHub', 'https://github.com/nov/openid_connect_sample_rp' %>
       )
     </li>
-    <li>
-      <small>&copy; <%= link_to 'nov matake', 'https://github.com/nov'%></small>
-    </li>
   </ul>
+  
+  &copy; <%= link_to 'nov matake', 'https://github.com/nov/' %>
+  <address>&copy; <%= link_to 'Hisashi Horikawa', 'https://www.nslabs.jp/' %></address>
 </footer>
 </body>
 </html>
