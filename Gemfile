@@ -53,6 +53,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # 2020年5月現在, 比較的最近までメンテナンスされているものは、次の2択:
 #   - https://github.com/nov/fb_graph2
 #   - https://github.com/arsduo/koala
+# facebook_oauth は 2011年で終了している。
 gem 'fb_graph2'
 
 gem 'rack-oauth2'
