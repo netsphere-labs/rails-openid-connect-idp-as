@@ -24,7 +24,7 @@ class Client < ApplicationRecord
   
   # 第2引数はλ式
   scope :dynamic, -> { where(dynamic: true) }
-  scope :valid, lambda {
+  scope :valid, -> {
     where {
       (expires_at == nil) |
       (expires_at >= Time.now.utc)
