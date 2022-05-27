@@ -6,6 +6,23 @@ Ruby on Rails 6.1. See https://www.nslabs.jp/digital-identity.rhtml
 
 
 
+## OpenSSL v3.0 (Fedora 36, CentOS Stream 9)
+
+`openid_connect` gem が依存する `json-jwt` 1.13.0 で次のエラーが発生. <code>OpenSSL::PKey::PKeyError</code> 型. 
+
+<pre>
+rsa#set_key= is incompatible with OpenSSL 3.0
+</pre>
+
+OpenSSL の仕様変更により ruby/openssl v3.0 のいくつかのメソッドが取り除かれた。とはいえ、Ruby v2.x のときからそれらのメソッドは非推奨 deprecated になっており、しかも OpenSSL v3.0 との組み合わせでは動かない。
+
+関連 issue: <a href="https://github.com/nov/json-jwt/issues/100">Add OpenSSL 3 support · Issue #100 · nov/json-jwt</a>
+
+修正待つしかなさそう。
+
+
+
+
 ## Resources
 
 For this sample:
