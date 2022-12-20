@@ -48,6 +48,7 @@ Also of interest, the corresponding sample RP:
 
  - Ruby on Rails v6.1
  - fb_graph2
+ - sorcery
  - openid_connect
 
 This sample application does not use "omniauth-openid-connect" gem.
