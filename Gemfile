@@ -66,7 +66,8 @@ gem 'fb_graph2'
 gem 'rack-oauth2'
 
 # depends on json, validate_email, validate_url, webfinger, ...
-gem 'openid_connect', '~> 1.2'
+gem 'json-jwt', '>= 1.14.0' # OpenSSL 3.0
+gem 'openid_connect', '~> 1.4.2'  # v1.3 は不可.
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger 
