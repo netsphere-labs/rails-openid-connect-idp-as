@@ -78,13 +78,18 @@ private
     end
 
 
-    def authenticate(code)
+    def authenticate(code, nonce)
       # token の検証
       client.authorization_code = code
-      token = client.access_token! :secret_in_body
+      token = client.access_token! :secret_in_body  # ここで IdP にアクセス
       id_token = OpenIDConnect::ResponseObject::IdToken.decode(
         token.id_token, jwks
       )
+      # 検証に失敗すると例外
+      id_token.verify!({ :issuer => config[:issuer],
+                         :nonce => nonce,
+                         :client_id => config[:client_id] })
+
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
       connect.id_token = id_token.as_json

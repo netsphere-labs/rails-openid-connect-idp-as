@@ -27,8 +27,8 @@ class Account < ApplicationRecord
 
   class << self
     # Sorcery login() から callback される.
-    def authenticate provider_class, code
-      yield provider_class.authenticate(code)
+    def authenticate provider_class, code, nonce
+      yield provider_class.authenticate(code, nonce)
     end
   end # class << self
 

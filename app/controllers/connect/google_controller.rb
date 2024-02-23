@@ -10,9 +10,11 @@ class Connect::GoogleController < ApplicationController
     if params[:code].blank? || session[:state] != params[:state]
       raise AuthenticationRequired.new
     end
-
+    session.delete(:state)
+    
     # login() 内部で user_class.authenticate(*credentials) が呼び出される
-    if login(Connect::Google, params[:code])  
+    nonce = session[:nonce]; session.delete(:nonce)
+    if login(Connect::Google, params[:code], nonce) 
       redirect_back_or_to('/dashboard', notice: 'Login successful')
     else
       flash[:alert] = 'Login failed'
@@ -31,7 +33,7 @@ class Connect::GoogleController < ApplicationController
                   #response_type: 'id_token token', # Implicit Flow
                   scope: ['openid', "email", "profile"], # 'openid' 必須
                   state: session[:state], # 推奨
-                  nonce: session[:nonce]  # 推奨. Implicit Flow では必須
+                  nonce: session[:nonce]  # 推奨. Implicit Flow では必須. FAPI では必須
                 )
   end
 end
