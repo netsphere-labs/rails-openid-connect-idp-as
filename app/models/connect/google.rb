@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 
 class Connect::Google < Connect::Base
-  serialize :id_token
+  # 裏で YAML 形式で保存される。 -> 保存時にエラー.
+  #serialize :id_token
 
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
@@ -35,7 +36,10 @@ private
     def config
       return @config if @config
       
-      @config = YAML.load_file(Rails.root.to_s + "/config/connect/google.yml")[Rails.env].symbolize_keys
+      # Ruby 3.1 で YAML (psych) 4.0.0 がバンドル。非互換.
+      @config = YAML.load_file(Rails.root.to_s + "/config/connect/google.yml",
+                               aliases: true)[Rails.env].symbolize_keys
+      # discovery metadata のほうが優先
       @config.merge! OpenIDConnect::Discovery::Provider::Config.discover!(
                        @config[:issuer]
                      ).as_json
@@ -61,15 +65,16 @@ private
     
     # @return Authentication Request URL
     def authorization_uri(options = {})
-      client.authorization_uri options.merge(
-        scope: config[:scopes_supported]
-      )
+      # `options` のほうが優先
+      client.authorization_uri( {
+                scope: config[:scopes_supported]
+      }.merge(options) )
     end
 
     def jwks
-      @jwks ||= JSON::JWK::Set.new(JSON.parse(
-        OpenIDConnect.http_client.get(config[:jwks_uri]).body
-      ))
+      @jwks ||= JSON::JWK::Set.new(#JSON.parse(
+        OpenIDConnect.http_client.get(config[:jwks_uri]).body # これは Hash
+      )#)
     end
 
 
@@ -82,15 +87,16 @@ private
       )
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
-      connect.id_token = id_token
+      connect.id_token = id_token.as_json
 
       email = id_token.raw_attributes[:email]
       account = connect.account || Account.find_by_email(email) ||
                 Account.new(email: email)
       Account.transaction do
-        account.google = connect  # Facebook が先にあった場合
+        #account.google = connect  # Facebook が先にあった場合
         account.name = id_token.raw_attributes[:name]
         account.save!
+        connect.account_id = account.id
         connect.save!
       end
       

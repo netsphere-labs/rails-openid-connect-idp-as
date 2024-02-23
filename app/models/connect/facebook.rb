@@ -31,16 +31,18 @@ class Connect::Facebook < Connect::Base
 
   class << self
     def config
-      unless @config
-        @config = YAML.load_file("#{Rails.root}/config/connect/facebook.yml")[Rails.env].symbolize_keys
-        if Rails.env.production?
-          @config.merge!(
+      return @config if @config
+
+      # Ruby 3.1 で YAML (psych) 4.0.0 がバンドル。非互換.
+      @config = YAML.load_file("#{Rails.root}/config/connect/facebook.yml",
+                               aliases: true)[Rails.env].symbolize_keys
+      if Rails.env.production?
+        @config.merge!(
             client_id:     ENV['fb_client_id'],
             client_secret: ENV['fb_client_secret']
           )
-        end
       end
-      @config
+      return @config
     end
 
     def auth

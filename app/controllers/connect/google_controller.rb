@@ -27,9 +27,11 @@ class Connect::GoogleController < ApplicationController
     session[:state] = SecureRandom.hex(32)
     session[:nonce] = SecureRandom.hex(32)
     redirect_to Connect::Google.authorization_uri(
-      #response_type: 'id_token token', # Implicit Flow
-      state: session[:state],
-      #nonce: session[:nonce], # Implicit Flow では必須            
-    )
+                  response_type: 'code', # Authorization Code Flow
+                  #response_type: 'id_token token', # Implicit Flow
+                  scope: ['openid', "email", "profile"], # 'openid' 必須
+                  state: session[:state], # 推奨
+                  nonce: session[:nonce]  # 推奨. Implicit Flow では必須
+                )
   end
 end

@@ -67,7 +67,7 @@ gem 'rack-oauth2'
 
 # depends on json, validate_email, validate_url, webfinger, ...
 gem 'json-jwt', '>= 1.14.0' # OpenSSL 3.0
-gem 'openid_connect', '~> 1.4.2'  # v1.3 は不可.
+gem 'openid_connect', '~> 2.3'  # v1.3 は不可.
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger 
@@ -85,7 +85,7 @@ group :development do
 
   # Display performance information such as SQL time and flame graphs for each request in your browser.
   # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
-  gem 'rack-mini-profiler', '~> 2.0'
+  gem 'rack-mini-profiler', '~> 3.3'
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

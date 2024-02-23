@@ -3,7 +3,7 @@
 class Connect::FacebookController < ApplicationController
 
   # Facebook から戻ってくる.
-  # GET /connect/facebooks/1 or /connect/facebooks/1.json
+  # GET /connect/facebook
   def show
     if login(Connect::Facebook, cookies)
       redirect_back_or_to('/dashboard', notice: 'Login successful')
