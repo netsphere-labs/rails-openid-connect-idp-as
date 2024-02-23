@@ -62,7 +62,7 @@ private
       )
     end
 
-    
+
     # @return Authentication Request URL
     def authorization_uri(options = {})
       # `options` のほうが優先
@@ -77,7 +77,7 @@ private
       )#)
     end
 
-
+    # Callback
     def authenticate(code, nonce)
       # token の検証
       client.authorization_code = code
