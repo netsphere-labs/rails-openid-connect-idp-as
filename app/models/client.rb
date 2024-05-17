@@ -26,7 +26,7 @@ class Client < ApplicationRecord
   scope :dynamic, -> { where(dynamic: true) }
   scope :valid, -> {
     where {
-      (expires_at == nil) |
+      (expires_at == nil) ||
       (expires_at >= Time.now.utc)
     }
   }

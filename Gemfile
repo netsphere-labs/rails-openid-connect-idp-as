@@ -29,7 +29,10 @@ gem 'pg'
 #gem 'sass-rails', '>= 6'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 5.0'
+# Webpacker v5.x は webpack v4.46 に依存。OpenSSL v3.0 で動かない.
+#   -> jsbundling-rails + webpack にしろ。
+# gem 'webpacker', '~> 5.0'
+gem "jsbundling-rails"
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 #gem 'turbolinks', '~> 5'
@@ -45,8 +48,14 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.4.4', require: false
+if RUBY_VERSION != '3.3.1'
+  # Error: The application encountered the following error: comparison of String with nil failed (ArgumentError)
+  #     /opt/rbenv/versions/3.3.1/lib/ruby/3.3.0/bundled_gems.rb:130:in `<'
+  # この bug: https://bugs.ruby-lang.org/issues/20450
+
+  # Reduces boot times through caching; required in config/boot.rb
+  gem 'bootsnap', '>= 1.4.4', require: false
+end
 
 # Squeel unlocks the power of Arel.
 # Supporting Rails 3 and 4.  -> Not 5
