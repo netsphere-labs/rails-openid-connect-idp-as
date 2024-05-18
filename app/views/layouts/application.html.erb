@@ -8,12 +8,11 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <link rel="stylesheet" href="/uikit3/css/uikit.min.css" />
-  <script src="/uikit3/js/uikit.min.js"></script>
-  <script src="/uikit3/js/uikit-icons.min.js"></script>
-        
+  <link rel="stylesheet" href="/bulma1/css/bulma.min.css" />
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  <!-- All of BulmaJS -->
+  <script src="/bulmajs/bulma.js"></script>
 </head>
 <body>
   <%= yield :body_connect_fb %>
