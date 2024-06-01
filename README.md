@@ -1,8 +1,66 @@
-# OpenIDConnectOp Sample
 
-A sample OpenID Connect Provider (OP or IdP) using the `openid_connect` gem. The Authorization Code Flow and the Implicit Flow.
+# OpenIDConnect OP (IdP) Sample
 
-Ruby on Rails 6.1. See https://www.nslabs.jp/digital-identity.rhtml
+## What's this?
+
+A sample OpenID Connect provider (OP or IdP) using the `openid_connect` gem. The Authorization Code Flow and the Implicit Flow.
+
+クライアントの開発のため、複数のユーザを切り替えて払い出す。デバッグのため、正常なレスポンスだけでなく、異常なレスポンスも返す。
+
+See https://www.nslabs.jp/digital-identity.rhtml
+
+Ruby on Rails 6.1. 
+
+
+## サポートする仕様
+
+### OpenID Connect Discovery 1.0 ✓
+
+ - Issuer discovery  ユーザ識別子のドメインパートのホストに対して、次のような `GET` リクエストを投げると、issuer を返す.
+```
+   GET /.well-known/webfinger?resource=acct:example@example.com&
+                              rel=http://openid.net/specs/connect/1.0/issuer
+```
+   ユーザ識別子のドメインパートが IdP ホストとは限らない。現在ではほとんど用いられない
+
+ - OpenID Provider Configuration
+   `<issuer>/.well-known/openid-configuration` を `GET` する
+
+
+<a href="https://qiita.com/TakahikoKawasaki/items/83c47c9830097dba2744">実装者による Financial-grade API (FAPI) 解説</a> を踏まえて、現代的な挙動へのアップデートを行うこと。Part 1: Baseline だけでよい。
+
+
+ - No.4 クライアント認証
+```json
+"token_endpoint_auth_methods_supported": [
+    "client_secret_post",
+    "private_key_jwt",  ●●未了. このサポートが必須. マジか. Entra ID (旧 AzureAD) ぐらいしかサポートする IdP はないようだが.
+    "client_secret_basic"
+  ],
+```
+
+No.5 `"private_key_jwt"` で RSA を用いる場合、キーサイズは 2048bit 以上。
+
+ - No.7 PKCE (RFC 7636) with `S256`: ●●未了. このサポートが必須. 
+   認可リクエストは明示的に `code_challenge_method=S256` を含めなければならない。
+   discovery に `code_challenge_methods_supported` がある。(RFC 8414)
+   + Yahoo!  discovery あり. リクエストは任意
+   + Azure AD -- 推奨, SPAの場合は必須. https://learn.microsoft.com/ja-jp/entra/identity-platform/v2-oauth2-auth-code-flow
+   + Google Identity -- discovery あり. モバイル/デスクトップアプリのみ? https://developers.google.com/identity/protocols/oauth2/native-app?hl=ja
+   + LINE    -- discovery あり.
+
+ - No.12 過去に認可された scope よりもリクエストされた scope が多ければ、再度ユーザに認可を求める。
+   Fake Users 画面から、認可した scope を削除できるようにする。●●未了
+   
+ - クライアントが `openid` スコープを要求した場合, `nonce` パラメータが必須。
+   レスポンスの ID Token 内に `nonce` を埋め込む.
+   The Authorization Code Flow では OPTIONAL, The Implicit Flow では REQUIRED だが、前者でもリクエストに含めるべき。
+   ●●未了。わざとレスポンスから `nonce` を抜いて、きちんとクライアントが確認しているかを見れるようにする。
+
+ - クライアントが `openid` スコープを要求しなかった場合, `state` パラメータが必須。ブラウザ cookie に埋め込むことで、CSRF/XSRF 緩和。
+   仕様では RECOMMENDED となっている。 
+   ●●未了。同様にレスポンスを不正にして、クライアントの様子を確認。
+
 
 
 

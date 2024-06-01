@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>OpenidConnectOpSample</title>
+  <title>OpenIDConnect OP (IdP) Sample</title>
 
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
@@ -17,23 +17,36 @@
 <body>
   <%= yield :body_connect_fb %>
 
-<nav class="uk-navbar-container" uk-navbar>
-  <div class="uk-navbar-left">
-    <%= t('site.description') %>
-    <ul class="uk-navbar-nav">
-      <li class="uk-active"><a href="/fake_users/">Fake Users</a></li>
-    </ul>
+<nav class="navbar is-info" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <%= t('site.description') %>
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu"
+       aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
   </div>
-  <div class="uk-navbar-right">
-    <% if current_user %>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/fake_users/">Fake Users</a>
+    </div>
+
+    <div class="navbar-end">
+<% if current_user %>
       Admin: <%= current_user.name %> &lt;<%= current_user.email %>&gt;
       Last login at <%= current_user.last_login_at %>
       <%= form_tag session_path, method: :delete do  %>
-        <%= submit_tag 'Logout', class:'uk-button uk-button-secondary' %>
+        <%= submit_tag 'Logout', class:'button' %>
       <% end %>
-    <% else %>
+<% else %>
       Not logged in  
-    <% end %>
+<% end %>
+    </div>
   </div>
 </nav>
 

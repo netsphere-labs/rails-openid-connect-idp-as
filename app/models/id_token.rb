@@ -82,7 +82,8 @@ private
     def config
       unless @config
         config_path = File.join Rails.root, 'config/connect/id_token'
-        @config = YAML.load_file(File.join(config_path, 'issuer.yml'))[Rails.env].symbolize_keys
+        @config = YAML.load_file(File.join(config_path, 'issuer.yml'),
+                                 aliases: true)[Rails.env].symbolize_keys
         @config[:jwks_uri] = File.join(@config[:issuer], 'jwks.json')
         private_key = OpenSSL::PKey::RSA.new(
           File.read(File.join(config_path, 'private.key')),

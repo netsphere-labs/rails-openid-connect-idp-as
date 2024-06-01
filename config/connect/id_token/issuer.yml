@@ -1,5 +1,5 @@
 
-# 自分がOPになるための設定
+# 自分が OP (IdP) になるための設定
 # http://localhost:4000/.well-known/openid-configuration
 development: &defaults
   issuer: http://localhost:4000

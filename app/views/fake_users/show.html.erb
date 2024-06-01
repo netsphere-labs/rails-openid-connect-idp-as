@@ -5,5 +5,22 @@
     <li><span></span></li>
 </ul>
 
-<%= link_to 'Edit', edit_fake_user_path(@fake_user) %> |
-<%= link_to 'Back', fake_users_path %>
+<table class="table">
+  <tr><th>identifier: <td><%= @fake_user.identifier %>  
+  <tr><th>name:       <td><%= @fake_user.name %>
+  <tr><th>email:       <td><%= @fake_user.email %>
+  <tr><th>address:       <td><%= @fake_user.address %>
+  <tr><th>profile:       <td><%= @fake_user.profile %>
+  <tr><th>locale:       <td><%= @fake_user.locale %>
+  <tr><th>Phone Number:       <td><%= @fake_user.phone_number %>
+  <tr><th>verified:       <td><%= @fake_user.verified %>
+</table>
+
+
+
+
+<p><%= link_to 'Edit', edit_fake_user_path(@fake_user) %> |
+  <%= link_to 'Destroy', @fake_user, method: :delete,
+              data: { confirm: 'Are you sure?' } %>
+
+        
