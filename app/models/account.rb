@@ -2,7 +2,7 @@
 
 # テナント
 class Account < ApplicationRecord
-  # ユーザモデル・クラス名が User でない場合は, config/initializers/sorcery.rb
+  # ユーザモデル・クラス名が `User` でない場合は, `config/initializers/sorcery.rb`
   # ファイル内のクラス名を書き換えること.
   authenticates_with_sorcery!
 
@@ -26,7 +26,7 @@ class Account < ApplicationRecord
   validates :email, presence: true, uniqueness: true
 
   class << self
-    # Sorcery login() から callback される.
+    # Sorcery `login()` から callback される.
     def authenticate provider_class, code, nonce
       yield provider_class.authenticate(code, nonce)
     end

@@ -12,6 +12,8 @@ See https://www.nslabs.jp/digital-identity.rhtml
 Ruby on Rails 6.1. 
 
 
+
+
 ## サポートする仕様
 
 ### OpenID Connect Discovery 1.0 ✓
@@ -48,6 +50,8 @@ No.5 `"private_key_jwt"` で RSA を用いる場合、キーサイズは 2048bit
    + Azure AD -- 推奨, SPAの場合は必須. https://learn.microsoft.com/ja-jp/entra/identity-platform/v2-oauth2-auth-code-flow
    + Google Identity -- discovery あり. モバイル/デスクトップアプリのみ? https://developers.google.com/identity/protocols/oauth2/native-app?hl=ja
    + LINE    -- discovery あり.
+
+●● rack-oauth2 パッケージにサーバ側の PKCE サポートがある。これを使うか
 
  - No.12 過去に認可された scope よりもリクエストされた scope が多ければ、再度ユーザに認可を求める。
    Fake Users 画面から、認可した scope を削除できるようにする。●●未了
@@ -223,4 +227,5 @@ may be of help.
 ## Copyright
 
 Copyright (c) 2011 nov matake. See LICENSE for details.
-Copyright (c) 2021 Hisashi Horikawa.
+
+Copyright (c) 2020-2021,2024 Hisashi Horikawa.

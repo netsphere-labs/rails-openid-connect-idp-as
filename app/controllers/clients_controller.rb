@@ -14,7 +14,7 @@ class ClientsController < ApplicationController
   def new
     @client = Client.new
     # redirect_uri は複数持てる.
-    @redirect_uris = ['']
+    @redirect_uris = []
   end
 
 

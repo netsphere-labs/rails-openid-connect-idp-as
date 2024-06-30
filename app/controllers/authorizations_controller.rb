@@ -136,7 +136,7 @@ private
                                 client: @client,
                                 redirect_uri: res.redirect_uri,
                                 nonce: req.nonce)
-      authorization.scopes << @scopes
+      authorization.scopes << @scopes    # ユーザ (fake_user) が認可した scope
       if @request_object
         authorization.create_authorization_request_object!(
           request_object: RequestObject.new(

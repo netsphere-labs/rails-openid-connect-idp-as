@@ -52,6 +52,7 @@ private
       return @config
     end
 
+
     def client
       @client ||= OpenIDConnect::Client.new(
         identifier:             config[:client_id],
@@ -65,7 +66,7 @@ private
 
     # @return Authentication Request URL
     def authorization_uri(options = {})
-      # `options` のほうが優先
+      # ここは `options` のほうが優先
       client.authorization_uri( {
                 scope: config[:scopes_supported]
       }.merge(options) )
@@ -77,7 +78,7 @@ private
       )#)
     end
 
-    # Callback
+    # Sorcery -> user_class -> callback
     def authenticate(code, nonce)
       # token の検証
       client.authorization_code = code
@@ -90,6 +91,8 @@ private
                          :nonce => nonce,
                          :client_id => config[:client_id] })
 
+      ### id_token が得られた. ここからユーザ登録
+      
       connect = find_or_initialize_by(identifier: id_token.subject)
       connect.access_token = token.access_token
       connect.id_token = id_token.as_json

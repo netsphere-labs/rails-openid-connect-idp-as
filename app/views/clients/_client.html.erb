@@ -1,15 +1,16 @@
+
 <fieldset class="client">
   <h3>
     <%= client.name %>
-    <span class="redirect_uris">(<%= client.redirect_uris.try(:join, ' ') %>)</span>
+    <code class="redirect_uris"><%= client.redirect_uris.try(:join, ' ') %></code>
   </h3>
   <details>
     <summary><%= t('client.credentials') %></summary>
     <dl>
-      <dt><%= t('client.identifier') %></dt>
-      <dd><%= client.identifier %></dd>
+      <dt><%= t('client.identifier') %>
+      <dd><code><%= client.identifier %></code>
       <dt><%= t('client.secret') %></dt>
-      <dd><%= client.secret %></dd>
+      <dd><code><%= client.secret %></code>
     </dl>
     <nav class="authorize">
       <h4><%= t('authorizations.new.title', client:client.name) %></h4>

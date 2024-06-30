@@ -7,9 +7,11 @@ class Authorization < ApplicationRecord
   # 払い出すユーザ
   #belongs_to :account
   belongs_to :fake_user
-  
+
+  # ユーザ (fake_user) が、クライアント (RP) に対して何の scope を認可したのか
   has_many :authorization_scopes
   has_many :scopes, through: :authorization_scopes
+  
   has_one :authorization_request_object
   has_one :request_object, through: :authorization_request_object
 
