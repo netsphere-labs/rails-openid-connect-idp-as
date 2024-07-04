@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Relying Party (RP) を保存する
+# Relying Party (RP)
 class Client < ApplicationRecord
   [:contacts, :redirect_uris, :raw_registered_json].each do |serializable|
     serialize serializable, JSON
@@ -34,15 +34,21 @@ class Client < ApplicationRecord
   class << self
     def available_response_types
       ['code',               # Authorization Code Flow
+       #'id_token',           # Implicit Flow
        'id_token token',     # Implicit Flow
        'code token',         # Hybrid Flow
        'code id_token',      # Hybrid Flow
-       'code id_token token' # Hybrid Flow
+       #'code id_token token' # Hybrid Flow
       ]
     end
 
+    # クライアントが token endpoint で使う
+    # "grant_types_supported": RFC 8414, the default is ["authorization_code", "implicit"]
     def available_grant_types
-      ['authorization_code', 'implicit']
+      ['authorization_code'
+       #, 'implicit',  おそらく使われる機会がない. response_type=token (RFC7591)
+       #'refresh_token'  ● TODO: サポート
+      ] 
     end
 
     def register!(registrar)

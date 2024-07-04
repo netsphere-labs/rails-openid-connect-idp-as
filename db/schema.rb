@@ -10,19 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2012_02_29_153919) do
+ActiveRecord::Schema.define(version: 2024_07_01_053728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "access_token_request_objects", force: :cascade do |t|
-    t.bigint "access_token_id"
-    t.bigint "request_object_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["access_token_id"], name: "index_access_token_request_objects_on_access_token_id"
-    t.index ["request_object_id"], name: "index_access_token_request_objects_on_request_object_id"
-  end
 
   create_table "access_token_scopes", id: :serial, force: :cascade do |t|
     t.integer "access_token_id"
@@ -36,6 +27,7 @@ ActiveRecord::Schema.define(version: 2012_02_29_153919) do
     t.integer "fake_user_id", null: false
     t.string "token", null: false
     t.datetime "expires_at", null: false
+    t.integer "request_object_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["token"], name: "index_access_tokens_on_token", unique: true
@@ -53,15 +45,6 @@ ActiveRecord::Schema.define(version: 2012_02_29_153919) do
     t.index ["email"], name: "index_accounts_on_email", unique: true
   end
 
-  create_table "authorization_request_objects", force: :cascade do |t|
-    t.bigint "authorization_id"
-    t.bigint "request_object_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["authorization_id"], name: "index_authorization_request_objects_on_authorization_id"
-    t.index ["request_object_id"], name: "index_authorization_request_objects_on_request_object_id"
-  end
-
   create_table "authorization_scopes", id: :serial, force: :cascade do |t|
     t.integer "authorization_id", null: false
     t.integer "scope_id", null: false
@@ -76,8 +59,10 @@ ActiveRecord::Schema.define(version: 2012_02_29_153919) do
     t.string "nonce"
     t.string "redirect_uri"
     t.datetime "expires_at", null: false
+    t.integer "request_object_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string "code_challenge"
     t.index ["code"], name: "index_authorizations_on_code", unique: true
   end
 
@@ -135,20 +120,12 @@ ActiveRecord::Schema.define(version: 2012_02_29_153919) do
     t.index ["identifier"], name: "index_fake_users_on_identifier", unique: true
   end
 
-  create_table "id_token_request_objects", force: :cascade do |t|
-    t.bigint "id_token_id"
-    t.bigint "request_object_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["id_token_id"], name: "index_id_token_request_objects_on_id_token_id"
-    t.index ["request_object_id"], name: "index_id_token_request_objects_on_request_object_id"
-  end
-
   create_table "id_tokens", id: :serial, force: :cascade do |t|
     t.integer "fake_user_id", null: false
     t.integer "client_id", null: false
-    t.string "nonce"
-    t.datetime "expires_at"
+    t.string "nonce", null: false
+    t.datetime "expires_at", null: false
+    t.integer "request_object_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -162,9 +139,12 @@ ActiveRecord::Schema.define(version: 2012_02_29_153919) do
   end
 
   create_table "request_objects", force: :cascade do |t|
-    t.text "jwt_string"
+    t.text "request_parameters", null: false
+    t.datetime "expires_at"
+    t.string "reference_value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["reference_value"], name: "index_request_objects_on_reference_value", unique: true
   end
 
   create_table "scopes", id: :serial, force: :cascade do |t|

@@ -3,20 +3,15 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '>= 3.0.1'
-
-if RUBY_VERSION >= "3.1.0"
-#   Error: The application encountered the following error: cannot load such file -- net/smtp (LoadError)
-#   /opt/rbenv/versions/3.1.1/lib/ruby/gems/3.1.0/gems/bootsnap-1.11.1/lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:15:in `require'
-# gem化されたのが原因. 明示する.
-  gem 'net-smtp', require: false
-end
+ruby '>= 3.3.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.3', '>= 6.1.3.2'
+gem 'rails', '~> 6.1.7', '>= 6.1.7.8'
 
-# Use sqlite3 as the database for Active Record
-#gem 'sqlite3', '~> 1.4'
+group :test do
+  # Use sqlite3 as the database for Active Record
+  gem 'sqlite3', '~> 1.4'
+end
 
 # PostgreSQL
 gem 'pg'
@@ -45,9 +40,6 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
-
 if RUBY_VERSION != '3.3.1'
   # Error: The application encountered the following error: comparison of String with nil failed (ArgumentError)
   #     /opt/rbenv/versions/3.3.1/lib/ruby/3.3.0/bundled_gems.rb:130:in `<'
@@ -56,14 +48,6 @@ if RUBY_VERSION != '3.3.1'
   # Reduces boot times through caching; required in config/boot.rb
   gem 'bootsnap', '>= 1.4.4', require: false
 end
-
-# Squeel unlocks the power of Arel.
-# Supporting Rails 3 and 4.  -> Not 5
-#gem 'squeel'
-
-# 'caches_constants' class method that will cache lookup data
-# 2009年のv0.0.2 が最終。メンテナンスされていない。
-#gem 'constant_cache', '0.0.2'
 
 # Facebook.
 # 2020年5月現在, 比較的最近までメンテナンスされているものは、次の2択:
@@ -79,7 +63,7 @@ gem 'json-jwt', '>= 1.14.0' # OpenSSL 3.0
 gem 'openid_connect', '~> 2.3'  # v1.3 は不可.
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger 
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
@@ -95,6 +79,7 @@ group :development do
   # Display performance information such as SQL time and flame graphs for each request in your browser.
   # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
   gem 'rack-mini-profiler', '~> 3.3'
+
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
@@ -105,7 +90,7 @@ group :test do
   gem 'capybara', '>= 3.26'
 
   gem 'selenium-webdriver', '>= 4.0.0.rc1'
-  
+
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
 end

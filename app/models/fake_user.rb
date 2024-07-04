@@ -11,18 +11,6 @@ class FakeUser < ApplicationRecord
   before_validation :setup, on: :create
   validates :identifier, presence: true, uniqueness: true
 
-  # @return [OpenIDConnect::ResponseObject::UserInfo]
-  def userinfo
-    attrs = {
-      id:      identifier,
-      name:    name,
-      email:   email,
-      address: address,
-      profile: profile,
-      phone_number: phone_number,
-    }
-    return OpenIDConnect::ResponseObject::UserInfo.new attrs
-  end
   
   def to_response_object access_token
     userinfo = userinfo()
@@ -31,14 +19,16 @@ class FakeUser < ApplicationRecord
         userinfo.send("#{attribute}=", nil) unless access_token.accessible?(attribute)
       end
     end
+    # scope values を使って claims を制限する。OIDC Section 5.4
     userinfo.email        = nil unless access_token.accessible?(Scope::EMAIL)   || access_token.accessible?(:email)
     userinfo.address      = nil unless access_token.accessible?(Scope::ADDRESS) || access_token.accessible?(:address)
     userinfo.phone_number = nil unless access_token.accessible?(Scope::PHONE)   || access_token.accessible?(:phone)
-    userinfo.subject = if access_token.client.ppid?
+    # `sub` は必須.
+    userinfo.sub = if access_token.client.ppid?
                          ppid_for(access_token.client.sector_identifier).identifier
-                       else
-                         identifier
-                       end
+                   else
+                     identifier
+                   end
     return userinfo
   end
 
@@ -48,5 +38,24 @@ private
   def setup
     self.identifier = SecureRandom.hex(8)
   end
+
+  # @return [OpenIDConnect::ResponseObject::UserInfo]
+  def userinfo
+    attrs = {
+      #sub:      identifier, # 必須. Subject - Identifier for the End-User at the Issuer
+      # `profile` scope
+      name:    name,
+      profile: profile,
+      locale:  locale,
+      # `email` scope
+      email:   email,
+      # `address` scope
+      address: address,
+      # `phone` scope
+      phone_number: phone_number,
+    }
+    return OpenIDConnect::ResponseObject::UserInfo.new attrs
+  end
+
 end
 

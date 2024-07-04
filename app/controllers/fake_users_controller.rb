@@ -1,7 +1,9 @@
-# -*- coding:utf-8 -*-
+
 
 # 払い出されるユーザ
 class FakeUsersController < ApplicationController
+  before_action :require_login
+
   before_action :set_fake_user, only: %i[ show edit update destroy ]
 
   # GET /fake_users or /fake_users.json
@@ -28,7 +30,7 @@ class FakeUsersController < ApplicationController
 
     respond_to do |format|
       if @fake_user.save
-        format.html { redirect_to @fake_user, notice: "Fake user was successfully created." }
+        format.html { redirect_to fake_user_url(@fake_user), notice: "Fake user was successfully created." }
         format.json { render :show, status: :created, location: @fake_user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -41,7 +43,7 @@ class FakeUsersController < ApplicationController
   def update
     respond_to do |format|
       if @fake_user.update(fake_user_params)
-        format.html { redirect_to @fake_user, notice: "Fake user was successfully updated." }
+        format.html { redirect_to fake_user_url(@fake_user), notice: "Fake user was successfully updated." }
         format.json { render :show, status: :ok, location: @fake_user }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -53,6 +55,7 @@ class FakeUsersController < ApplicationController
   # DELETE /fake_users/1 or /fake_users/1.json
   def destroy
     @fake_user.destroy
+
     respond_to do |format|
       format.html { redirect_to fake_users_url, notice: "Fake user was successfully destroyed." }
       format.json { head :no_content }

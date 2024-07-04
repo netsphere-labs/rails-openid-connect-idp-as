@@ -42,7 +42,7 @@ class ClientsController < ApplicationController
     @redirect_uris = @client.redirect_uris
   end
 
-  
+
   # PATCH/PUT /clients/1 or /clients/1.json
   def update
     @redirect_uris = client_params.permit(redirect_uris: [])[:redirect_uris]

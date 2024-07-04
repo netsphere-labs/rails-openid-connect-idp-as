@@ -4,13 +4,19 @@ class CreateIdTokens < ActiveRecord::Migration[4.2]
   def self.up
     create_table :id_tokens do |t|
       # 払い出すユーザ
-      #t.belongs_to :account, null:false
-      t.belongs_to :fake_user, null:false
+      t.references :fake_user, type: :integer, null:false
       # RP
-      t.belongs_to :client,  null:false
+      t.references :client,    type: :integer, null:false
 
-      t.string :nonce
-      t.datetime :expires_at
+      # `nonce` を必須に。FAPI
+      t.string :nonce, null:false
+
+      # "exp" クレームで埋め込む (必須クレーム)
+      t.datetime :expires_at, null:false
+      
+      # "claims" リクエストパラメータ
+      t.references :request_object, type: :integer
+      
       t.timestamps
     end
   end

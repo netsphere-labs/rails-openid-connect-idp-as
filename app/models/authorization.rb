@@ -5,20 +5,20 @@ class Authorization < ApplicationRecord
   # RP
   belongs_to :client
   # 払い出すユーザ
-  #belongs_to :account
   belongs_to :fake_user
 
   # ユーザ (fake_user) が、クライアント (RP) に対して何の scope を認可したのか
   has_many :authorization_scopes
   has_many :scopes, through: :authorization_scopes
   
-  has_one :authorization_request_object
-  has_one :request_object, through: :authorization_request_object
+  #has_one :authorization_request_object
+  # "claims" リクエストパラメータがあった場合, アクセストークン・id token の
+  # レスポンスに含めるクレームを削る
+  belongs_to :request_object, optional:true #through: :authorization_request_object
 
   before_validation :setup, on: :create
 
   validates :client,     presence: true
-  #validates :account,    presence: true
   validates :fake_user,  presence: true
   validates :code,       presence: true, uniqueness: true
   validates :expires_at, presence: true

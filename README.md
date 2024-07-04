@@ -1,4 +1,10 @@
 
+●●未了
+ - `registration_endpoint` 動的な登録の再実装
+ - `end_session_endpoint` シングルログアウト (SLO) の実装
+ - `"refresh_token"` grant type. トークン有効期限の延長.
+
+
 # OpenIDConnect OP (IdP) Sample
 
 ## What's this?

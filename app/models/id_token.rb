@@ -2,17 +2,15 @@
 
 class IdToken < ApplicationRecord
   # 払い出すユーザ
-  #belongs_to :account
   belongs_to :fake_user
   # RP
   belongs_to :client
 
-  has_one :id_token_request_object
-  has_one :request_object, through: :id_token_request_object
+  # "claims": "id_token" クレーム要求を含めることができる
+  belongs_to :request_object, optional:true #, through: :id_token_request_object
 
   before_validation :setup, on: :create
 
-  #validates :account, presence: true
   validates :fake_user, presence: true
   validates :client,    presence: true
 

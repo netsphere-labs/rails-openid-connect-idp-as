@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   # List of RP
   get 'dashboard', to: 'dashboard#show'
 
-  # Relying Party (RP) - テナントにぶら下がる
+  # Relying Party (RP) - テナントが管理する
   resources :clients
 
   # テナントユーザのログインのため
@@ -37,16 +37,16 @@ Rails.application.routes.draw do
     #resource :client,   only: :create
   end
 
-  # 払い出されるユーザ ###########################################
-  
+  # 払い出されるユーザ 
   resources :fake_users
+
+  root to: 'top#index'
+
 
   # IdP 機能 #####################################################
 
-  # テナントにぶら下がる
+  # 認可エンドポイント. 登録された RP がアクセスできる
   resources :authorizations, only: [:new, :create]
-
-  root to: 'top#index'
 
   # 'webfinger', 'openid-configuration'
   get   '.well-known/:id', to: 'discovery#show'

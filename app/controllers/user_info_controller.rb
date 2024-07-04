@@ -1,8 +1,8 @@
 
 # The UserInfo Endpoint MUST accept Access Tokens as OAuth 2.0 Bearer Token
 # Usage [RFC6750].
-class UserInfoController < ApplicationController
-  # See lib/authentication.rb
+class UserInfoController < ApiController
+  # RFC 6750 Bearer Token Usage の方法でアクセストークンを受け入れる
   before_action :require_user_access_token
 
   #rescue_from FbGraph::Exception, Rack::OAuth2::Client::Error do |e|
@@ -34,7 +34,7 @@ private
     Scope::OPENID
   end
 
-  # for before_filter
+  # for `before_action`
   def require_user_access_token
     require_access_token
     raise Rack::OAuth2::Server::Resource::Bearer::Unauthorized.new(:invalid_token, 'User token is required') unless @current_token.fake_user

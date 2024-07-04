@@ -4,16 +4,18 @@ class CreateAccessTokens < ActiveRecord::Migration[4.2]
   def self.up
     create_table :access_tokens do |t|
       # RP
-      t.belongs_to :client,    null:false
+      t.references :client,    type: :integer, null:false
       # 払い出されるユーザ
-      #t.belongs_to :account
-      t.belongs_to :fake_user, null:false
+      t.references :fake_user, type: :integer, null:false
 
-      t.string :token,         null:false # unique
+      t.string :token,         null:false, index: {unique: true}
       t.datetime :expires_at,  null:false
+
+      # "claims" リクエストパラメータ
+      t.references :request_object, type: :integer
+
       t.timestamps
     end
-    add_index :access_tokens, :token, unique: true
   end
 
   def self.down
