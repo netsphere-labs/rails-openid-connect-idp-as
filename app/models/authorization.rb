@@ -18,8 +18,8 @@ class Authorization < ApplicationRecord
 
   before_validation :setup, on: :create
 
-  validates :client,     presence: true
-  validates :fake_user,  presence: true
+  #validates :client,     presence: true
+  #validates :fake_user,  presence: true
   validates :code,       presence: true, uniqueness: true
   validates :expires_at, presence: true
 

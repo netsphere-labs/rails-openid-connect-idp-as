@@ -11,9 +11,13 @@ class IdToken < ApplicationRecord
 
   before_validation :setup, on: :create
 
-  validates :fake_user, presence: true
-  validates :client,    presence: true
-
+  #validates :fake_user, presence: true
+  #validates :client,    presence: true
+  # FAPI で必須に.
+  validates :nonce,      presence: true
+  # "exp" クレーム
+  validates :expires_at, presence: true
+  
   scope :valid, lambda {
     where { expires_at >= Time.now.utc }
   }

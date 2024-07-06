@@ -7,8 +7,9 @@ class Client < ApplicationRecord
   end
 
   # 'admin' account が client を所有する. => テナントの位置づけ
-  # 通常は, 開発者と一般ユーザで、アカウントをまったく分けたりはしない.
-  belongs_to :account
+  # IdP では, RP を登録する開発者とログインする一般ユーザは、まったく別。
+  # Dynamic Client Registration 1.0 の場合, null になる.
+  belongs_to :account, optional: true
   
   has_many :access_tokens
   has_many :authorizations
@@ -70,20 +71,6 @@ class Client < ApplicationRecord
     end
   end # class << self
 
-  # for validate
-  def check_redirect_uris
-    redirect_uris.each do |redirect_uri|
-      begin
-        uri = URI.parse(redirect_uri)
-        if !(uri && ['https', 'http'].include?(uri.scheme) && !uri.host.blank?)
-          errors.add :redirect_uris, 'invalid redirect_uri: ' + redirect_uri
-        end
-      rescue URI::InvalidURIError
-        errors.add :redirect_uris, 'invalid URI: ' + redirect_uri
-      end
-    end
-  end
-  private :check_redirect_uris
   
 =begin
   # for views/clients/_form.html.erb
@@ -92,7 +79,8 @@ class Client < ApplicationRecord
     self.redirect_uris = Array(redirect_uri)
   end
 =end
-  
+
+
   def as_json(options = {})
     hash = raw_registered_json || {}
     hash.merge!(
@@ -107,11 +95,26 @@ class Client < ApplicationRecord
 
 private
 
-  # For before_validation
+  # For `before_validation()`
   def setup
     self.identifier = SecureRandom.hex(16)
     self.secret     = SecureRandom.hex(32)
     self.expires_at = 1.hour.from_now if dynamic?
     self.name     ||= 'Unknown'
   end
+
+  # for `validate()`
+  def check_redirect_uris
+    redirect_uris.each do |redirect_uri|
+      begin
+        uri = URI.parse(redirect_uri)
+        if !(uri && ['https', 'http'].include?(uri.scheme) && !uri.host.blank?)
+          errors.add :redirect_uris, 'invalid redirect_uri: ' + redirect_uri
+        end
+      rescue URI::InvalidURIError
+        errors.add :redirect_uris, 'invalid URI: ' + redirect_uri
+      end
+    end
+  end
+
 end

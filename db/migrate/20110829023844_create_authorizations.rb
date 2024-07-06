@@ -5,9 +5,9 @@ class CreateAuthorizations < ActiveRecord::Migration[4.2]
   def self.up
     create_table :authorizations do |t|
       # RP
-      t.references :client,    type: :integer, null:false
+      t.references :client,    type: :integer, null:false, foreign_key: true
       # 払い出すユーザ
-      t.references :fake_user, type: :integer, null:false
+      t.references :fake_user, type: :integer, null:false, foreign_key: true
 
       t.string :code,          null:false, index: {unique: true}
       t.string :nonce
@@ -15,7 +15,7 @@ class CreateAuthorizations < ActiveRecord::Migration[4.2]
       t.datetime :expires_at,  null:false
 
       # "claims" リクエストパラメータ
-      t.references :request_object, type: :integer
+      t.references :request_object, type: :integer, foreign_key: true
       
       t.timestamps
     end

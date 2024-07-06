@@ -5,12 +5,10 @@ class CreateConnectFacebooks < ActiveRecord::Migration[4.2]
     # 単数形 -> config/initializers/inflections.rb で単複同形の宣言要.
     create_table :connect_facebook do |t|
       t.references :account,   null: false, foreign_key: true
-      t.string :identifier,   null:false
-      t.string :access_token, null:false
+      t.string :identifier,   null:false, index: {unique: true}
+      t.string :access_token, null:false, index: {unique: true}
       t.timestamps
     end
-    add_index :connect_facebook, :access_token, unique: true
-    add_index :connect_facebook, :identifier,   unique: true
   end
 
   def self.down

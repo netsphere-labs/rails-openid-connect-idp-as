@@ -1,5 +1,26 @@
 # -*- coding:utf-8 -*-
 
+=begin
+NotFound の正しい投げ方
+
+×間違い raise HttpError::NotFound
+×間違い render status: 404 などなど
+次とする解説も多いが, 実は捕捉できていない。
+```
+  rescue_from ActionController::RoutingError, with:メソッド名
+```
+      
+次が正解. 単に投げればよい. 引数は `message, efailures = []`
+```
+  raise ActionController::RoutingError.new('unknown ' + params[:id])
+```
+
+Production 環境では自動的に 404 にしてくれる。`ActiveRecord::RecordNotFound` も同様。
+See https://github.com/rails/rails/blob/6-1-stable/actionpack/lib/action_dispatch/middleware/exception_wrapper.rb
+    https://github.com/rails/rails/blob/6-1-stable/activerecord/lib/active_record/railtie.rb
+=end
+
+
 class DiscoveryController < ApiController
   #skip_before_action :authorization
   
@@ -15,16 +36,6 @@ class DiscoveryController < ApiController
       # <issuer>/.well-known/openid-configuration
       openid_configuration
     else
-      #raise HttpError::NotFound
-      # render status: 404 とか、いろんな解説があるが、はて。
-      # 次とする解説が多いが, 実は捕捉できていない。
-      #    rescue_from ActionController::RoutingError, with:メソッド名
-      
-      # これが正解. 単に投げればよい. 引数は message, failures = []
-      # production 環境では, 自動的に 404 にしてくれる。
-      # ActiveRecord::RecordNotFound も同様。
-      # See https://github.com/rails/rails/blob/6-1-stable/actionpack/lib/action_dispatch/middleware/exception_wrapper.rb
-      #     https://github.com/rails/rails/blob/6-1-stable/activerecord/lib/active_record/railtie.rb
       raise ActionController::RoutingError.new('unknown ' + params[:id])
     end
   end

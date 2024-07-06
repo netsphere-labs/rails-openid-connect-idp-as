@@ -7,15 +7,12 @@
 class CreateRequestObjects < ActiveRecord::Migration[6.1]
   def change
     create_table :request_objects do |t|
-      # JSON
-      t.text :request_parameters, null:false
+      t.text :request_parameters, null:false, comment:"JSONテキスト"
 
-      # PAR の場合のみ
-      t.datetime :expires_at
+      t.datetime :expires_at, comment:"PAR の場合のみ"
 
-      # PAR の場合のみ
-      # "urn:ietf:params:oauth:request_uri:" に続ける
-      t.string :reference_value, index: {unique: true}
+      t.string :reference_value, index: {unique: true},
+               comment:"PAR の場合のみ。`urn:ietf:params:oauth:request_uri:` に続ける"
       
       t.timestamps
     end

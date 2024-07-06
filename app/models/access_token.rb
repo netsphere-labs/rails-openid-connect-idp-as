@@ -45,7 +45,7 @@ class AccessToken < ApplicationRecord
 
   before_validation :setup, on: :create
 
-  validates :client,     presence: true
+  #validates :client,     presence: true
   validates :token,      presence: true, uniqueness: true
   validates :expires_at, presence: true
 
