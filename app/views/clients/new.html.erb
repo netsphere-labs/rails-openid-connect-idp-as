@@ -1,10 +1,11 @@
+
 <h1>New Client (RP)</h1>
 
 <article>
-  <%= form_for @client, :html => {:class => 'uk-form-horizontal'} do |f| %>
+  <%= form_for @client, :html => {:class => 'box'} do |f| %>
     <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
                                f: f %>
-    <%= link_to 'Cancel', '/dashboard', class:'uk-button uk-button-default' %>
+    <%= link_to 'Cancel', '/dashboard', class:'button is-light' %>
     <%= f.submit class:'button is-primary' %>
   <% end %>
 </article>

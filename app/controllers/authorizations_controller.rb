@@ -4,47 +4,118 @@
 # RFC 6749 (Oct 2012) The OAuth 2.0 Authorization Framework
 # https://www.rfc-editor.org/rfc/rfc6749
 
+=begin
+Sorcery: 明示的にログインした時刻
+
+Activity Logging モジュールを使う.
+ - `last_login_at`
+ - `last_activity_at` などのフィールドをデータベースに保存.
+
+Sorcery は, `Config.after_login` と `Config.after_remember_me` 設定がある。
+前者は `login(*credentials)` 内から呼び出される。
+
+Activity Logging の `last_login_at` は明示的にログインした時刻として使ってよい
+=end
+
+
+# 認可エンドポイント
 class AuthorizationsController < ApplicationController
   rescue_from Rack::OAuth2::Server::Authorize::BadRequest do |e|
     @error = e
     logger.info e.backtrace[0,10].join("\n")
-    render :error, status: e.status
+    render :error, layout:false, status: e.status
   end
 
+
+  # GET
   # 認証の開始: 確認画面を表示
   # authorization_endpoint: "http://localhost:4000/authorizations/new"
   def new
-    # viewstate に必要:
-    #   @client, @response_type, @redirect_uri, @scopes,
-    #   @_request_, @request_uri,
-    #   @request_object
-    call_authorization_endpoint false
+    # まず, request object をつくる. 内部で client 検査
+    @request_object = RequestObject.find_or_build_from_params params
+
+    # 妥当性を確認する
+    call_authorization_endpoint(@request_object) do |req, res|
+      request_validation(req, res)
+    end
+    return if performed?  # エラー / リダイレクトの場合
+      
+    # ログインしていなければ、または max_age を経過していたら, ログインを求め
+    # る. 
+    # 本来は, 実際にログインするユーザ.
+    if logged_in? && (max_age = @request_object.max_age) &&
+                     current_user.last_login_at < max_age.seconds.ago
+      flash[:alert] = 'Exceeded Max Age, Login Again'
+      logout() # ここでセッションがリセットされる
+    end
+    # かならず `logout()` より後ろに書く
+    require_login()
+    return if performed?  # 未ログイン: リダイレクトの場合
+    
+    # ここにはかならずログイン済みの状態
+=begin
+過去に認可を得ている scope であれば, そのまま RP にリダイレクトバックしてよい
+  -> これは, アクセストークンの期限より長い。
+     TODO: (FakeUser, Client, Scope) 表が必要
+=end
+
+    @viewstate = SecureRandom.alphanumeric(12)
+    session[@viewstate] = {
+      params: params  # 再現できるので、オリジナルのパラメータだけ.
+    }
   end
 
+  
+  # POST
   # ユーザの approve/deny を受けて、RPにリダイレクトバックする.
   def create
-    call_authorization_endpoint true, params[:approve]
+    req = session[params['_viewstate']][:params]
+    @request_object = RequestObject.find_or_build_from_params req
+
+    @fake_user = FakeUser.find params[:fake_user]
+    @authorized_scopes = params[:scope]  # ● 配列になるか?
+    raise "check"
+    approved = params[:approve]
+    
+    call_authorization_endpoint(@request_object) do |req, res|
+      # ユーザによる approve/deny
+      if approved
+        consent_and_redirect_back req, res
+      else
+        req.access_denied!
+      end
+    end
   end
 
 
 private
 
-  def call_authorization_endpoint allow_approval, approved = false
-    endpoint = authorization_endpoint_authenticator allow_approval, approved
-    # [ 200, {"Content-Type" => "text/plain"}, ["Hello Rack!\n\n"] ]
-    status, header, res_body = endpoint.call(request.env)
-    
-    require_login()  # 再ログインでここに戻ってくる. OK
-    if !allow_approval
-      if (max_age = @request_object.try(:id_token).try(:max_age)) &&
-         current_user.last_login_at < max_age.seconds.ago
-        flash[:alert] = 'Exceeded Max Age, Login Again'
-        logout()
-        require_login()
-      end
-    end
+  # だいぶ頭の痛い造りになっている
+  # コールバックを強制させるつくりなのも厳しい。
+  @@authorize_handlers = {
+    # rack-oauth2
+    'code' => Rack::OAuth2::Server::Authorize::Code ,
+    'token' => Rack::OAuth2::Server::Authorize::Token, 
+    'code token' => Rack::OAuth2::Server::Authorize::Extension::CodeAndToken ,
+    # openid_connect
+    'id_token' => Rack::OAuth2::Server::Authorize::Extension::IdToken ,
+    'id_token token' => Rack::OAuth2::Server::Authorize::Extension::IdTokenAndToken ,
+    'code id_token' => Rack::OAuth2::Server::Authorize::Extension::CodeAndIdToken ,
+    'code id_token token' => Rack::OAuth2::Server::Authorize::Extension::CodeAndIdTokenAndToken ,
+  }
 
-    # エラー時に、次のようにレスポンスヘッダに格納する
+  def call_authorization_endpoint(request_obj, &block)
+    endpoint = Rack::OAuth2::Server::Authorize.new &block
+    req = {
+      Rack::RACK_REQUEST_QUERY_HASH => request_obj,
+      Rack::RACK_REQUEST_QUERY_STRING => "X",
+      Rack::QUERY_STRING => "X",
+    }
+    # 戻り値 = [ 200, {"Content-Type" => "text/plain"}, ["Hello Rack!\n\n"] ]
+    status, header, res_body = endpoint.call(req)
+    
+    # エラー時に、次のようにレスポンスヘッダに格納する. Status は上のほうの
+    # `rescue_from` で set される.
     #   HTTP/1.1 401 Unauthorized
     #   WWW-Authenticate: Bearer realm="example",
     #                     error="invalid_token",
@@ -60,25 +131,20 @@ private
   end
 
 
-  # @param allow_approval RPからのリダイレクトの時 false
-  #                       ユーザによる approve/deny のとき true
-  # @param approved       ユーザによる approve のとき true.
-  #
-  # @return [Rack::OAuth2::Server::Authorize] rackオブジェクト.
-  def authorization_endpoint_authenticator allow_approval, approved = false
-    return Rack::OAuth2::Server::Authorize.new do |req, res|
-      raise TypeError if !req.is_a?(Rack::OAuth2::Server::Authorize::Request)
-      raise TypeError if !res.is_a?(Rack::OAuth2::Server::Authorize::Response)
+  # 当初リダイレクト時に callback
+  # View で表示するため, 次を設定:
+  #   @client, @redirect_uri, @scopes
+  def request_validation req, res
+    response_type = Array(req.response_type).collect(&:to_s).sort().join(' ')
+    if !Client.available_response_types.include?(response_type)
+      raise Rack::OAuth2::Server::Authorize::BadRequest.new("unsupported `response_type`")
+    end
+    
+    @client = Client.find_by_identifier(req.client_id) || req.bad_request!
+    @redirect_uri = req.verify_redirect_uri!(@client.redirect_uris)
 
-      @client = Client.find_by_identifier(req.client_id) || req.bad_request!
-      res.redirect_uri = @redirect_uri = req.verify_redirect_uri!(@client.redirect_uris)
-      if res.protocol_params_location == :fragment && req.nonce.blank?
-        req.invalid_request! 'nonce required'
-      end
-      # req.scope は配列.
-      openid_scope_value = false
-      @scopes = req.scope.inject([]) do |_scopes_, scope|
-                  openid_scope_value = true if scope == 'openid'
+    # req.scope は配列.
+    @scopes = req.scope.inject([]) do |_scopes_, scope|
                   _scope_ = Scope.find_by_name(scope)
                   if _scope_
                     _scopes_ << _scope_
@@ -87,96 +153,92 @@ private
                     # req.invalid_scope! "Unknown scope: #{scope}")
                   end
                   _scopes_
-                end
-      if !openid_scope_value
-        req.invalid_request! '`openid` scope value required'
-      end
-      @request_object =
-            if (@_request_ = req.request).present?
-              OpenIDConnect::RequestObject.decode req.request, nil # @client.secret
-            elsif (@request_uri = req.request_uri).present?
-              OpenIDConnect::RequestObject.fetch req.request_uri, nil # @client.secret
-            end
+              end
+    # implicit, hybrid: `nonce` 必須.
+    # FAPI: `openid` scope を要求した場合は `nonce` 必須.
+    if (res.protocol_params_location == :fragment || Scope.ary_find(@scopes, 'openid')) &&
+       req.nonce.blank?
+      req.invalid_request! 'nonce required'
+    end
+    
+    if !Scope.ary_find(@scopes, 'openid')
+      req.invalid_request! '`openid` scope value required'
+    end
 
-      # req.response_type = :code ... Symbol
-      if Client.available_response_types.include?(
-                    Array(req.response_type).collect(&:to_s).sort().join(' '))
-        if allow_approval
-          # ユーザによる approve/deny
-          if approved
-            approved! req, res
-          else
-            req.access_denied!
-          end
-        else
-          # 当初リダイレクト時
-          @response_type = req.response_type
-        end
-      else
-        req.unsupported_response_type!
+    # PKCE
+    if Array(req.response_type).include? :code
+      if req.code_challenge_method != "S256"
+        req.invalid_request!('only support `S256`') 
       end
     end
   end
 
 
-  def approved!(req, res)
-    # 'code',               # Authorization Code Flow
-    # 'id_token token',     # Implicit Flow
-    # 'code token',         # Hybrid Flow
-    # 'code id_token',      # Hybrid Flow
-    # 'code id_token token' # Hybrid Flow
+  # 'code',               # Authorization Code Flow  認可コード
+  # 'id_token token',     # Implicit Flow            IDトークン + アクセストークン #fragment. エラーも fragment で
+  # 'code token',         # Hybrid Flow              認可コード + アクセストークン #fragment. エラーも fragment で
+  # 'code id_token',      # Hybrid Flow              認可コード + IDトークン #fragment. エラーも fragment で.
+  def consent_and_redirect_back(req, res)
     response_types = Array(req.response_type)
-    fake_user = FakeUser.find params[:fake_user]
+    redirect_uri = req.verify_redirect_uri!(@request_object.client.redirect_uris)
 
     if response_types.include? :code
       # Authentication Response では code (と state) しか返さない.
       # => この時点で, どのユーザか特定して保存が必要.
-      authorization = Authorization.create!(
-                                fake_user: fake_user,
-                                client: @client,
-                                redirect_uri: res.redirect_uri,
+      ActiveRecord::Base.transaction do
+        authorization = Authorization.new(
+                                fake_user: @fake_user,
+                                client: @request_object.client,
+                                redirect_uri: redirect_uri,
+                                code_challenge: req.code_challenge, # PKCE
                                 nonce: req.nonce)
-      authorization.scopes << @scopes    # ユーザ (fake_user) が認可した scope
-      if @request_object
-        authorization.create_authorization_request_object!(
-          request_object: RequestObject.new(
-            jwt_string: @request_object.to_jwt(@client.secret, :HS256)
-          )
-        )
+        if req.claims && req.claims.length > 0
+          @request_object.save!
+          authorization.request_object_id = @request_object.id
+        end
+        authorization.save!
+        authorization.scopes << @authorized_scopes # ユーザ (fake_user) が認可した scope
       end
       res.code = authorization.code
     end
 
     # 事前検査済みなので、これでよい.
     if response_types.include? :token
-      access_token = AccessToken.create!(fake_user:fake_user, client:@client)
-      access_token.scopes << @scopes
-      if @request_object
-        access_token.create_access_token_request_object!(
-          request_object: RequestObject.new(
-            jwt_string: @request_object.to_jwt(@client.secret, :HS256)
-          )
-        )
+      ActiveRecord::Base.transaction do
+        access_token = AccessToken.new(fake_user: @fake_user,
+                                       client: @request_object.client)
+        if req.claims && req.claims.length > 0
+          if req.claims.userinfo 
+            @request_object.save!
+            access_token.request_object_id = @request_object.id
+          end
+        end
+        access_token.save!
+        access_token.scopes << @authorized_scopes
       end
       res.access_token = access_token.to_bearer_token
     end
 
     if response_types.include? :id_token
-      _id_token_ = IdToken.create!(fake_user:fake_user,
-                                   client: @client,
-                                   nonce: req.nonce )
-      if @request_object
-        _id_token_.create_id_token_request_object!(
-          request_object: RequestObject.new(
-            jwt_string: @request_object.to_jwt(@client.secret, :HS256)
-          )
-        )
+      ActiveRecord::Base.transaction do
+        _id_token_ = IdToken.new(fake_user: @fake_user,
+                                 client: @request_object.client,
+                                 nonce: req.nonce )
+        if req.claims && req.claims.length > 0
+          if req.claims.id_token
+            @request_object.save!
+            _id_token_.request_object_id = @request_object.id
+          end
+        end
+        _id_token_.save!
       end
+      
       res.id_token = _id_token_.to_jwt(
         code: (res.respond_to?(:code) ? res.code : nil),
         access_token: (res.respond_to?(:access_token) ? res.access_token : nil)
       )
     end
+    
     res.approve!
   end
 

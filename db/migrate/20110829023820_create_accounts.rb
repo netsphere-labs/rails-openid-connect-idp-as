@@ -11,10 +11,10 @@ class CreateAccounts < ActiveRecord::Migration[4.2]
       t.string :name,  null:false
 
       # Sorcery ActivityLogging を有効にする.
-      t.datetime :last_login_at
+      t.datetime :last_login_at, comment: "明示的にログインしたときのみ記録される"
+      t.string   :last_login_from_ip_address
       t.datetime :last_logout_at
       t.datetime :last_activity_at
-      t.string   :last_login_from_ip_address
       
       t.timestamps   null:false
     end

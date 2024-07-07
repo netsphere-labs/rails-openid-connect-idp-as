@@ -5,7 +5,6 @@ class CreateScopes < ActiveRecord::Migration[4.2]
       t.string :name, null:false, index:{unique:true}
       t.timestamps
     end
-    add_index :scopes, :name, unique: true
   end
 
   def self.down

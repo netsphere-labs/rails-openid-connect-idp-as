@@ -1,17 +1,16 @@
-<%= form_with(model: fake_user) do |form| %>
-  <% if fake_user.errors.any? %>
+
+  <% if @fake_user.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(fake_user.errors.count, "error") %> prohibited this fake_user from being saved:</h2>
+      <h2><%= pluralize(@fake_user.errors.count, "error") %> prohibited this fake_user from being saved:</h2>
 
       <ul>
-        <% fake_user.errors.each do |error| %>
+        <% @fake_user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= form.submit class:'uk-button uk-button-primary' %>
-  </div>
-<% end %>
+
+  ●ここにフィールド
+  

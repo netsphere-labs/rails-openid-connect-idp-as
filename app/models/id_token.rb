@@ -81,6 +81,7 @@ private
       nil
     end
 
+    # ● TODO: このメソッドの番地がおかしい
     def config
       unless @config
         config_path = File.join Rails.root, 'config/connect/id_token'

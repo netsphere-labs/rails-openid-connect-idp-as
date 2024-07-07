@@ -1,44 +1,71 @@
-<% # 同時に複数の認証できるように、viewstateにする.
-  common_params = {
-    client: @client,
-    response_type: @response_type,
-    redirect_uri: @redirect_uri,
-    scopes: @scopes,
-    state: params[:state],
-    nonce: params[:nonce],
-    _request_: @_request_,
-    request_uri: @request_uri
-  }
-%>
 
-<p>[DEBUG] <b>params:</b> <%= params %>
+<p>[DEBUG] <b>params:</b> <%= @request_object.params %>
 
+
+  
 <h1><%= t('authorizations.new.title', client: @client.name) %></h1>
     
-<article>
-  <p><%= t('authorizations.new.description', redirect_uri: @redirect_uri) %></p>
-  <dl>
-    <dt><%= t('authorization.scope') %></dt>
-    <% @scopes.each do |scope| %>
-      <dd><%= scope.name %></dd>
-    <% end %>
-    <% if @request_object %>
-      <dt><%= t('authorization.request_object') %></dt>
-      <dd>
-        <pre><%= JSON.pretty_generate @request_object.as_json.as_json %></pre>
-      </dd>
-    <% end %>
-  </dl>
+<p><%= t('authorizations.new.description', redirect_uri: @redirect_uri) %></p>
 
 <%= form_tag authorizations_path do %>
-  <select name="fake_user" class="uk-select">
-    <%= options_from_collection_for_select(FakeUser.all, :id, :name) %>
-  </select>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Fake User:</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="select">
+            <select name="fake_user" >
+              <%= options_from_collection_for_select(FakeUser.all, :id, :name) %>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- /.field -->
 
-  <%= render 'authorizations/form', common_params.merge(action: :approve) %>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label"><%= t('authorization.scope') %></label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+<% @scopes.each do |scope| %>
+          <label class="checkbox">
+<% if scope.name == 'openid' %>
+            <%= hidden_field_tag 'scope[openid]', 1 %> ✓ 
+<% else %>
+            <%= check_box_tag "scope[#{scope.name}]", '1', true %>
+<% end %>
+            <%= scope.name %>
+          </label>
+<% end %>
+        </div>
+      </div>
+    </div>
+  </div> <!-- /.field -->
+  
+  
+<% # 二つの RP から並列にリダイレクトしてこれるようにするため,
+   # viewstate で区別する
+  %>
+  <%= hidden_field_tag '_viewstate', @viewstate %>
 
-  <%= submit_tag "Deny", name:'deny', class:'uk-button uk-button-danger' %>
-  <%= submit_tag "Approve", name:'approve', class:'uk-button uk-button-primary' %>
+<div class="field is-horizontal">
+  <div class="field-label">
+    <!-- Left empty for spacing -->
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control">    
+        <%= submit_tag "Deny", name:'deny', class:'button is-danger' %>
+        <%= submit_tag "Approve", name:'approve', class:'button is-primary' %>
+      </div>
+    </div>
+  </div>
+</div>
+
 <% end %>
   
-</article>

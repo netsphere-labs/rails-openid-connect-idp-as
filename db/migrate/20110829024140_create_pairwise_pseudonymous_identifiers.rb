@@ -17,8 +17,9 @@ class CreatePairwisePseudonymousIdentifiers < ActiveRecord::Migration[4.2]
       
       t.timestamps
     end
-    add_index :pairwise_pseudonymous_identifiers,
-              [:fake_user_id, :sector_identifier], unique:true
+    # Error: Index name is too long; the limit is 63 characters
+    #add_index :pairwise_pseudonymous_identifiers,
+    #          [:fake_user_id, :sector_identifier], unique:true
   end
 
   def self.down

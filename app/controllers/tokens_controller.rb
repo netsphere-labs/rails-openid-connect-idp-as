@@ -2,8 +2,8 @@
 
 # Token Endpoint
 # The Authorization Code Flow: アクセストークンと id token の二つを返す.
-class TokensController < ApplicationController
-  protect_from_forgery with: :null_session
+class TokensController < ApiController
+  #protect_from_forgery with: :null_session
   
   # POST /access_tokens
   def index
@@ -30,6 +30,9 @@ private
         if !authorization || !authorization.valid_redirect_uri?(req.redirect_uri)
           req.invalid_grant!
         end
+        # PKCE
+        req.verify_code_verifier!(authorization.code_challenge)
+        
         access_token = authorization.access_token
         res.access_token = access_token.to_bearer_token
         if access_token.accessible?(Scope::OPENID)

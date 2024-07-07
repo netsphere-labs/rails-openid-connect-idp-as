@@ -22,11 +22,11 @@ require 'faker'
   FakeUser.create!(
     name:     Faker::Name.name,
     email:    Faker::Internet.email,
+    email_verified: false,
     address:  Faker::Address.full_address,
     profile:  Faker::Internet.url,
     locale:   locale,
-    phone_number: Faker::PhoneNumber.phone_number,
-    verified: false
+    phone_number: Faker::PhoneNumber.phone_number
   )
 end
 

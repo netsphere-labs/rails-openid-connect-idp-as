@@ -51,19 +51,23 @@
 </nav>
 
 <% if (str = flash[:notice]) %>
-<div class="uk-alert-success" uk-alert>
-  <a class="uk-alert-close" uk-close></a>
-  <p><%= str %>
+<div class="notification is-info" >
+  <button class="delete"></button>
+  <%= str %>
 </div>
 <% end %>
 <% if (str = flash[:alert]) %>
-<div class="uk-alert-danger" uk-alert>
-  <a class="uk-alert-close" uk-close></a>
-  <p><%= str %>
+<div class="notification is-danger is-light" >
+  <button class="delete"></button>
+  <%= str %>
 </div>
 <% end %>
 
-    <%= yield %>
+<div class="content is-normal">
+  <%= yield %>
+</div> <!-- /.content -->
+
+
 
 <footer class="page_footer">
   <ul>

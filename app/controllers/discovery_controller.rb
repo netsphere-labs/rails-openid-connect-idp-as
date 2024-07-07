@@ -72,15 +72,16 @@ private
       # request object
       request_parameter_supported: true,
       request_uri_parameter_supported: true,
-      request_object_signing_alg_values_supported: [:HS256, :HS384, :HS512], 
+      request_object_signing_alg_values_supported:
+                        RequestObject::SIGNING_ALG_VALUES_SUPPORTED,
       
       subject_types_supported: ['public', 'pairwise'],
       id_token_signing_alg_values_supported: [:RS256],
       token_endpoint_auth_methods_supported: ['client_secret_basic', 'client_secret_post'],
       claims_supported: ['sub', 'iss',
-                         'name', 'email', 'address', 'profile', 'locale', 'phone_number'], 
+                         'name', 'email', 'email_verified', 'address', 'profile', 'locale', 'phone_number'], 
       # PKCE
-      code_challenge_methods_supported: ['S256']
+      code_challenge_methods_supported: ['S256']  ●●これが表示されない
     )
     render json: config
   end

@@ -22,7 +22,7 @@ class CreateClients < ActiveRecord::Migration[4.2]
       t.boolean :dynamic, :native, :ppid, default: false
 
       # PPID 用. Host component of a URL used by the RP's organization.
-      # フィールドは `clients` につくるが, 値は `accounts` 間で同じにする
+      # フィールドは `clients` につくるが, 値は `account` 内で同じにする
       # See https://oauth.jp/blog/2019/06/08/sign-in-with-apple-analysis/
       t.string :sector_identifier
       

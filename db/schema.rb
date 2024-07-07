@@ -16,10 +16,11 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
   enable_extension "plpgsql"
 
   create_table "access_token_scopes", id: :serial, force: :cascade do |t|
-    t.integer "access_token_id"
-    t.integer "scope_id"
+    t.integer "access_token_id", null: false
+    t.integer "scope_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["access_token_id", "scope_id"], name: "index_access_token_scopes_on_access_token_id_and_scope_id", unique: true
   end
 
   create_table "access_tokens", id: :serial, force: :cascade do |t|
@@ -36,10 +37,10 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
   create_table "accounts", id: :serial, force: :cascade do |t|
     t.string "email", null: false
     t.string "name", null: false
-    t.datetime "last_login_at"
+    t.datetime "last_login_at", comment: "明示的にログインしたときのみ記録される"
+    t.string "last_login_from_ip_address"
     t.datetime "last_logout_at"
     t.datetime "last_activity_at"
-    t.string "last_login_from_ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_accounts_on_email", unique: true
@@ -50,6 +51,7 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
     t.integer "scope_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["authorization_id", "scope_id"], name: "index_authorization_scopes_on_authorization_id_and_scope_id", unique: true
   end
 
   create_table "authorizations", id: :serial, force: :cascade do |t|
@@ -72,13 +74,14 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
     t.string "identifier", null: false
     t.string "secret", null: false
     t.string "jwks_uri"
-    t.string "sector_identifier"
     t.string "redirect_uris"
     t.boolean "dynamic", default: false
     t.boolean "native", default: false
     t.boolean "ppid", default: false
+    t.string "sector_identifier"
     t.datetime "expires_at"
     t.text "raw_registered_json"
+    t.string "client_public_keys"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["identifier"], name: "index_clients_on_identifier", unique: true
@@ -113,7 +116,7 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
     t.string "profile"
     t.string "locale"
     t.string "phone_number"
-    t.boolean "verified", null: false
+    t.boolean "email_verified", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_fake_users_on_email", unique: true
@@ -131,17 +134,18 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
   end
 
   create_table "pairwise_pseudonymous_identifiers", id: :serial, force: :cascade do |t|
-    t.integer "account_id"
-    t.string "identifier"
-    t.string "sector_identifier"
+    t.integer "fake_user_id", null: false
+    t.string "identifier", null: false
+    t.string "sector_identifier", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["identifier"], name: "index_pairwise_pseudonymous_identifiers_on_identifier", unique: true
   end
 
   create_table "request_objects", force: :cascade do |t|
-    t.text "request_parameters", null: false
-    t.datetime "expires_at"
-    t.string "reference_value"
+    t.text "request_parameters", null: false, comment: "JSONテキスト"
+    t.datetime "expires_at", comment: "PAR の場合のみ"
+    t.string "reference_value", comment: "PAR の場合のみ。`urn:ietf:params:oauth:request_uri:` に続ける"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["reference_value"], name: "index_request_objects_on_reference_value", unique: true
@@ -154,6 +158,21 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
     t.index ["name"], name: "index_scopes_on_name", unique: true
   end
 
+  add_foreign_key "access_token_scopes", "access_tokens"
+  add_foreign_key "access_token_scopes", "scopes"
+  add_foreign_key "access_tokens", "clients"
+  add_foreign_key "access_tokens", "fake_users"
+  add_foreign_key "access_tokens", "request_objects"
+  add_foreign_key "authorization_scopes", "authorizations"
+  add_foreign_key "authorization_scopes", "scopes"
+  add_foreign_key "authorizations", "clients"
+  add_foreign_key "authorizations", "fake_users"
+  add_foreign_key "authorizations", "request_objects"
+  add_foreign_key "clients", "accounts"
   add_foreign_key "connect_facebook", "accounts"
   add_foreign_key "connect_google", "accounts"
+  add_foreign_key "id_tokens", "clients"
+  add_foreign_key "id_tokens", "fake_users"
+  add_foreign_key "id_tokens", "request_objects"
+  add_foreign_key "pairwise_pseudonymous_identifiers", "fake_users"
 end

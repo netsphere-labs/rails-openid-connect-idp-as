@@ -23,12 +23,13 @@ class Scope < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  #include ConstantCache
-  #caches_constants
-
   ['openid', 'profile', 'email', 'address', 'phone'].each do |x|
     const_set(x.upcase, find_by_name(x))
   end
 
+  # @return 見つからなかったとき nil
+  def self.ary_find(ary, name)
+    ary.find do |x| x.name == name end
+  end
 end # class Scope
 

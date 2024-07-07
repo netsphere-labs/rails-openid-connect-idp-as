@@ -1,5 +1,12 @@
+
 <h1>New Fake User</h1>
 
-<%= render 'form', fake_user: @fake_user %>
+<%= form_with(model: @fake_user, class:'box') do |form| %>
+  <%= render 'form', form:form %>
 
-<%= link_to 'Back', fake_users_path %>
+  <div class="actions">
+    <%= link_to 'Back', fake_users_path, class:'button is-light' %>
+    <%= form.submit class:'button is-primary' %>
+  </div>
+<% end %>
+  
