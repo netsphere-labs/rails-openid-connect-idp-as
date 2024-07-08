@@ -44,33 +44,35 @@ class RequestObject < ApplicationRecord
   
   
   def self.find_or_build_from_params(params, defaults = {})
-    client = Client.find_by_identifier(params[:client_id]) ||
-             raise(Rack::OAuth2::Server::Authorize::BadRequest)
+    raise TypeError if params.nil?
+    
+    client = Client.find_by_identifier(params['client_id']) ||
+             raise(Rack::OAuth2::Server::Authorize::BadRequest.new('client_id'))
     # 両方は不可
-    if !params[:request].blank? && !params[:request_uri].blank?
-      raise(Rack::OAuth2::Server::Authorize::BadRequest)
+    if !params['request'].blank? && !params['request_uri'].blank?
+      raise Rack::OAuth2::Server::Authorize::BadRequest.new("Both of `request` and `request_uri`")
     end
     
-    if !params[:request].blank?
+    if !params['request'].blank?
       # リクエストオブジェクト外のパラメータは全部無視. JAR section 6.3
       # 署名アルゴリズムは `PS256` もしくは `ES256` のどちらか FAPI 1.0 Part 2, Section 8.6
       # `OpenIDConnect::RequestObject.decode()` メソッドもよくない。alg を制限できない。
       # `params` を差し替え
-      params = JSON::JWT.decode(params[:request], client.client_public_keys,
+      params = JSON::JWT.decode(params['request'], client.client_public_keys,
                                 SIGNING_ALG_VALUES_SUPPORTED) 
       if params.client_id != client.identifier
         raise(Rack::OAuth2::Server::Authorize::BadRequest)
       end
-    elsif !params[:request_uri].blank?
+    elsif !params['request_uri'].blank?
       # ここで `OpenIDConnect::RequestObject.fetch()` を呼び出してはいけない
       # DDoS 攻撃してしまう.
       #  -> かならず PAR <https://www.rfc-editor.org/rfc/rfc9126.html> として
       #     扱わなければならない.
-      if params[:request_uri].index(REQUEST_URI_SCHEME) != 0
-        raise(Rack::OAuth2::Server::Authorize::BadRequest)
+      if params['request_uri'].index(REQUEST_URI_SCHEME) != 0
+        raise Rack::OAuth2::Server::Authorize::BadRequest.new('uri scheme')
       end
       ret = find_by_reference_value(
-                        params[:request_uri][REQUEST_URI_SCHEME.length .. -1] )
+                        params['request_uri'][REQUEST_URI_SCHEME.length .. -1] )
       if !ret || ret.client_id != client.identifier
         raise(Rack::OAuth2::Server::Authorize::BadRequest)
       end

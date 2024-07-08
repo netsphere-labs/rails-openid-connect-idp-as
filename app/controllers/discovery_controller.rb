@@ -57,7 +57,9 @@ private
 
 
   def openid_configuration
-    config = OpenIDConnect::Discovery::Provider::Config::Response.new(
+    # `OpenIDConnect::Discovery::Provider::Config::Response` はクライアントが
+    # 使うクラス.
+    config = {
       issuer: IdToken.config[:issuer],
       authorization_endpoint: new_authorization_url,
       token_endpoint: access_tokens_url,
@@ -81,8 +83,8 @@ private
       claims_supported: ['sub', 'iss',
                          'name', 'email', 'email_verified', 'address', 'profile', 'locale', 'phone_number'], 
       # PKCE
-      code_challenge_methods_supported: ['S256']  ●●これが表示されない
-    )
+      code_challenge_methods_supported: ['S256'] 
+    }
     render json: config
   end
 end

@@ -43,7 +43,7 @@ class AuthorizationsController < ApplicationController
     # ログインしていなければ、または max_age を経過していたら, ログインを求め
     # る. 
     # 本来は, 実際にログインするユーザ.
-    if logged_in? && (max_age = @request_object.max_age) &&
+    if logged_in? && (max_age = @request_object.params['max_age']) &&
                      current_user.last_login_at < max_age.seconds.ago
       flash[:alert] = 'Exceeded Max Age, Login Again'
       logout() # ここでセッションがリセットされる
@@ -69,12 +69,15 @@ class AuthorizationsController < ApplicationController
   # POST
   # ユーザの approve/deny を受けて、RPにリダイレクトバックする.
   def create
-    req = session[params['_viewstate']][:params]
+    req = session[params['_viewstate']]['params'] # ここは key が文字列
+    session.delete(params['_viewstate'])
     @request_object = RequestObject.find_or_build_from_params req
 
     @fake_user = FakeUser.find params[:fake_user]
-    @authorized_scopes = params[:scope]  # ● 配列になるか?
-    raise "check"
+    # {"openid"=>"1", "email"=>"1", "profile"=>"1"}
+    @authorized_scopes = params[:scope].keys.map do |n|
+      Scope.find_by_name(n) || raise
+    end
     approved = params[:approve]
     
     call_authorization_endpoint(@request_object) do |req, res|
@@ -107,9 +110,10 @@ private
   def call_authorization_endpoint(request_obj, &block)
     endpoint = Rack::OAuth2::Server::Authorize.new &block
     req = {
-      Rack::RACK_REQUEST_QUERY_HASH => request_obj,
+      Rack::RACK_REQUEST_QUERY_HASH => request_obj.params,
       Rack::RACK_REQUEST_QUERY_STRING => "X",
       Rack::QUERY_STRING => "X",
+      Rack::RACK_INPUT => "X",
     }
     # 戻り値 = [ 200, {"Content-Type" => "text/plain"}, ["Hello Rack!\n\n"] ]
     status, header, res_body = endpoint.call(req)
@@ -180,7 +184,8 @@ private
   # 'code id_token',      # Hybrid Flow              認可コード + IDトークン #fragment. エラーも fragment で.
   def consent_and_redirect_back(req, res)
     response_types = Array(req.response_type)
-    redirect_uri = req.verify_redirect_uri!(@request_object.client.redirect_uris)
+    res.redirect_uri = redirect_uri =
+                req.verify_redirect_uri!(@request_object.client.redirect_uris)
 
     if response_types.include? :code
       # Authentication Response では code (と state) しか返さない.
@@ -198,8 +203,9 @@ private
         end
         authorization.save!
         authorization.scopes << @authorized_scopes # ユーザ (fake_user) が認可した scope
+        
+        res.code = authorization.code
       end
-      res.code = authorization.code
     end
 
     # 事前検査済みなので、これでよい.
@@ -215,8 +221,9 @@ private
         end
         access_token.save!
         access_token.scopes << @authorized_scopes
+
+        res.access_token = access_token.to_bearer_token        
       end
-      res.access_token = access_token.to_bearer_token
     end
 
     if response_types.include? :id_token
@@ -231,12 +238,12 @@ private
           end
         end
         _id_token_.save!
+
+        res.id_token = _id_token_.to_jwt(
+          code: (res.respond_to?(:code) ? res.code : nil),
+          access_token: (res.respond_to?(:access_token) ? res.access_token : nil)
+        )
       end
-      
-      res.id_token = _id_token_.to_jwt(
-        code: (res.respond_to?(:code) ? res.code : nil),
-        access_token: (res.respond_to?(:access_token) ? res.access_token : nil)
-      )
     end
     
     res.approve!
