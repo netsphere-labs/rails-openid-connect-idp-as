@@ -162,7 +162,7 @@ private
     # FAPI: `openid` scope を要求した場合は `nonce` 必須.
     if (res.protocol_params_location == :fragment || Scope.ary_find(@scopes, 'openid')) &&
        req.nonce.blank?
-      req.invalid_request! 'nonce required'
+      req.invalid_request! "`nonce` required"
     end
     
     if !Scope.ary_find(@scopes, 'openid')
