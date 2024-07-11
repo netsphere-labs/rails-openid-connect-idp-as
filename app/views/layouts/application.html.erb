@@ -50,6 +50,9 @@
   </div>
 </nav>
 
+
+<div class="content is-normal">
+
 <% if (str = flash[:notice]) %>
 <div class="notification is-info" >
   <button class="delete"></button>
@@ -63,8 +66,9 @@
 </div>
 <% end %>
 
-<div class="content is-normal">
+
   <%= yield %>
+
 </div> <!-- /.content -->
 
 
@@ -75,14 +79,12 @@
       <%= link_to 'OpenID Connect RubyGem', 'https://github.com/nov/openid_connect/' %>
     </li>
     <li>
-      This ConnectOpSample (
-        <%= link_to 'GitHub', 'https://github.com/netsphere-labs/openid_connect_sample/' %>
-      )
+      This <i>Rails OpenID Connect IdP AS</i> (former OpenID Connect OP Sample) 
+        <%= link_to 'GitHub', 'https://github.com/netsphere-labs/rails-openid-connect-idp-as/' %>
     </li>
     <li>
-      Nov's RP (
-        <%= link_to 'GitHub', 'https://github.com/nov/openid_connect_sample_rp' %>
-      )
+       <i>Rails OpenID Connect RP Sample</i>
+        <%= link_to 'GitHub', 'https://github.com/netsphere-labs/rails-openid-connect-rp-sample/' %>
     </li>
   </ul>
   

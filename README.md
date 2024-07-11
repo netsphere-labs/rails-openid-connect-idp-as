@@ -6,7 +6,7 @@
 
 
 
-# Rails OpenID Connect IdP AS
+# Rails OpenID Connect IdP AS (former OpenID Connect OP Sample)
 
 ## What's this?
 
@@ -108,7 +108,7 @@ Admin user としてログインする。払い出すユーザは "Fake Users" �
 
 ## Copyright
 
-Copyright (c) 2011 nov matake. See LICENSE for details.
+Copyright (c) 2011 nov matake. See `MIT-LICENSE` for details.
 
 Copyright (c) 2020-2021,2024 Hisashi Horikawa.
 
@@ -138,7 +138,7 @@ Also of interest, the corresponding sample RP:
 `openid_connect` gem が依存する `json-jwt` 1.13.0 で次のエラーが発生. <code>OpenSSL::PKey::PKeyError</code> 型. 
 
 <pre>
-rsa#set_key= is incompatible with OpenSSL 3.0
+<code>rsa#set_key=</code> is incompatible with OpenSSL 3.0
 </pre>
 
 OpenSSL の仕様変更により ruby/openssl v3.0 のいくつかのメソッドが取り除かれた。とはいえ、Ruby v2.x のときからそれらのメソッドは非推奨 deprecated になっており、しかも OpenSSL v3.0 との組み合わせでは動かない。
@@ -169,17 +169,5 @@ you will set `issuer` in the issuer.yml config file to your domain name.
   Nov uses PostgreSQL for his Heroku deployment, but the default DB configs are all SQLite.
 * The Facebook link won't work unless you register your app with them.
 
-
-## Centos OpenSSL Complications
-
-Centos' default OpenSSL package does not include some Elliptic Curve algorithms for patent reasons.
-Unfortunately, the gem dependency `json-jwt` calls on one of those excluded algorithms.
-
-If you see `uninitialized constant OpenSSL::PKey::EC` when you try to run the server,
-this is your problem. You need to rebuild OpenSSL to include those missing algorithms.
-
-This problem is beyond the scope of this README, but
-[this question on StackOverflow](http://stackoverflow.com/questions/32790297/uninitialized-constant-opensslpkeyec-from-ruby-on-centos/32790298#32790298)
-may be of help.
 
 

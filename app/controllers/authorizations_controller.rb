@@ -159,12 +159,17 @@ private
                   _scopes_
               end
     # implicit, hybrid: `nonce` 必須.
-    # FAPI: `openid` scope を要求した場合は `nonce` 必須.
+    # FAPI 1.0: `openid` scope を要求した場合は `nonce` 必須.
     if (res.protocol_params_location == :fragment || Scope.ary_find(@scopes, 'openid')) &&
        req.nonce.blank?
       req.invalid_request! "`nonce` required"
     end
-    
+    # FAPI 1.0: `openid` scope を要求しなかった場合, `state` 必須.
+    if !Scope.ary_find(@scopes, 'openid')
+      req.invalid_request! "`state` required" if req.state.blank?
+    end
+
+    # OIDC 3.1.2.1 If the `openid` scope value is not present, the behavior is entirely unspecified. エラーにしてしまう
     if !Scope.ary_find(@scopes, 'openid')
       req.invalid_request! '`openid` scope value required'
     end

@@ -6,9 +6,17 @@ window.fbAsyncInit = function() {
       appId:   '<%= Connect::Facebook.config[:client_id] %>',
       cookie:  true,
       xfbml:   true,
-      version: 'v12.0'
+      version: 'v20.0'
     });
-  };
+    FB.AppEvents.logPageView();  
+};
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
 </script>
 <% end %>
 
@@ -19,5 +27,3 @@ window.fbAsyncInit = function() {
                  onlogin="location.href = '<%= connect_facebook_path %>';">
 </fb:login-button>
 
-<!-- Load the JS SDK asynchronously -->
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>

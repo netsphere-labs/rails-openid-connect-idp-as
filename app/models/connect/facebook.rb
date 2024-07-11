@@ -1,5 +1,32 @@
 # -*- coding:utf-8 -*-
 
+# uninitialized constant #<Class:FbGraph2>::HTTPClient 対策
+require 'httpclient'
+
+# undefined method `filter_request' for an instance of FbGraph2::RequestFilter::Authenticator 対策
+# rack-oauth2 v2 で `filter_request()` が削除されている。復元する
+module Rack
+  module OAuth2
+    class AccessToken
+      class Authenticator
+# Callback called in HTTPClient (before sending a request)
+        # request:: HTTP::Message
+        def filter_request(request)
+          @token.authenticate(request)
+        end
+
+        # Callback called in HTTPClient (after received a response)
+        # response:: HTTP::Message
+        # request::  HTTP::Message
+        def filter_response(response, request)
+          # nothing to do
+        end
+      end
+    end
+  end
+end
+
+
 class Connect::Facebook < Connect::Base
   validates :identifier,   presence: true, uniqueness: true
   validates :access_token, presence: true, uniqueness: true
@@ -53,7 +80,7 @@ class Connect::Facebook < Connect::Base
     # これを怠ると, token hijacking される。
     # Facebook サイトの文書は, 相互に異なったことが書いてあったり、
     # そもそも検証が必要ということを強調しておらず、ひどい。
-    def authenticate(cookies)
+    def authenticate(cookies, dummy)
       # fb_graph2 では, from_cookie() 内で, SignedRequest の検証を自動的に行う.
       # client_secret のハッシュ値との比較。
       # => なので, client_secret が必要。
@@ -63,7 +90,8 @@ class Connect::Facebook < Connect::Base
         # ユーザが [キャンセル] を押した場合
         return [nil, :user_canceled]
       end
-      print _auth_.inspect # DEBUG
+      # DEBUG #<FbGraph2::Auth::SignedRequest:0x000xxx @payload_str=...
+      print _auth_.inspect 
       connect = find_or_initialize_by(identifier: _auth_.user.identifier)
       print connect.inspect # DEBUG
       connect.access_token = _auth_.access_token.access_token
