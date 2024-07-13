@@ -50,11 +50,9 @@ if RUBY_VERSION != '3.3.1'
 end
 
 # Facebook.
-# 2020年5月現在, 比較的最近までメンテナンスされているものは、次の2択:
-#   - https://github.com/nov/fb_graph2
-#   - https://github.com/arsduo/koala
-# facebook_oauth は 2011年で終了している。
-gem 'fb_graph2'
+# ▲ 'fb_graph2' は rack-oauth2 v2 で動かなくなっている。もう使えない.
+# koala はメンテナンスが継続している。
+# 別サンプルをつくった; https://gitlab.com/netsphere/rails-examples/-/tree/main/rails7/
 
 gem 'rack-oauth2'
 

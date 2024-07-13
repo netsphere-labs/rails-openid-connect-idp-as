@@ -87,16 +87,6 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
     t.index ["identifier"], name: "index_clients_on_identifier", unique: true
   end
 
-  create_table "connect_facebook", id: :serial, force: :cascade do |t|
-    t.integer "account_id", null: false
-    t.string "identifier", null: false
-    t.string "access_token", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["access_token"], name: "index_connect_facebook_on_access_token", unique: true
-    t.index ["identifier"], name: "index_connect_facebook_on_identifier", unique: true
-  end
-
   create_table "connect_google", id: :serial, force: :cascade do |t|
     t.integer "account_id", null: false
     t.string "identifier", null: false
@@ -169,7 +159,6 @@ ActiveRecord::Schema.define(version: 2024_07_01_053728) do
   add_foreign_key "authorizations", "fake_users"
   add_foreign_key "authorizations", "request_objects"
   add_foreign_key "clients", "accounts"
-  add_foreign_key "connect_facebook", "accounts"
   add_foreign_key "connect_google", "accounts"
   add_foreign_key "id_tokens", "clients"
   add_foreign_key "id_tokens", "fake_users"

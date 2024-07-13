@@ -5,6 +5,5 @@ class DashboardController < ApplicationController
   def show
     @account = current_user
     @clients = @account.clients
-    print Connect::Facebook.all.inspect  # DEBUG
   end
 end
