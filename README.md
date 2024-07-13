@@ -26,7 +26,7 @@ Ruby on Rails 6.1.
 ### Requirements
 
  - Ruby on Rails v6.1
- - fb_graph2
+ - <s>fb_graph2</s> 廃れた. Koala によるサンプル; https://gitlab.com/netsphere/rails-examples/-/tree/main/rails7/facebook-login/
  - sorcery   ※認証フレームワークは何でもよい。
  - openid_connect
 
