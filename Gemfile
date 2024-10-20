@@ -1,53 +1,49 @@
 # -*- coding:utf-8; mode:ruby -*-
 
-source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+# $ rails new OpenidConnectOpSample --database=postgresql --skip-active-storage --javascript=webpack --skip-bundle
 
-ruby '>= 3.3.2'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.7', '>= 6.1.7.8'
+source "https://rubygems.org"
 
-group :test do
-  # Use sqlite3 as the database for Active Record
-  gem 'sqlite3', '~> 1.4'
-end
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.2.1"
 
-# PostgreSQL
-gem 'pg'
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
 
-# Use Puma as the app server
-#gem 'puma', '~> 5.0'
+# Use postgresql as the database for Active Record
+gem "pg", "~> 1.1"
 
-# Use SCSS for stylesheets
-# 'Ruby Sass' has reached EOL and should no longer be used.
-#gem 'sass-rails', '>= 6'
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
 
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-# Webpacker v5.x は webpack v4.46 に依存。OpenSSL v3.0 で動かない.
-#   -> jsbundling-rails + webpack にしろ。
-# gem 'webpacker', '~> 5.0'
+# Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
 
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-#gem 'turbolinks', '~> 5'
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
 
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.7'
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
-# Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem "redis", ">= 4.0.1"
 
-if RUBY_VERSION != '3.3.1'
-  # Error: The application encountered the following error: comparison of String with nil failed (ArgumentError)
-  #     /opt/rbenv/versions/3.3.1/lib/ruby/3.3.0/bundled_gems.rb:130:in `<'
-  # この bug: https://bugs.ruby-lang.org/issues/20450
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
 
-  # Reduces boot times through caching; required in config/boot.rb
-  gem 'bootsnap', '>= 1.4.4', require: false
-end
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
 
 # Facebook.
 # ▲ 'fb_graph2' は rack-oauth2 v2 で動かなくなっている。もう使えない.
@@ -60,41 +56,31 @@ gem 'rack-oauth2'
 gem 'json-jwt', '>= 1.14.0' # OpenSSL 3.0
 gem 'openid_connect', '~> 2.3'  # v1.3 は不可.
 
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger
-  # console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
-  # 払い出されるユーザを生成
+group :development, :test do
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem "brakeman", require: false
+
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
+
+  # 追加. 払い出されるユーザを生成
   gem 'faker'
 end
 
 group :development do
-  # Access an interactive console on exception pages or by calling 'console' 
-  # anywhere in the code.
-  gem 'web-console', '>= 4.1.0'
-
-  # Display performance information such as SQL time and flame graphs for each request in your browser.
-  # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
-  gem 'rack-mini-profiler', '~> 3.3'
-
-  gem 'listen', '~> 3.3'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 3.26'
-
-  gem 'selenium-webdriver', '>= 4.0.0.rc1'
-
-  # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
+  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
+  gem "selenium-webdriver"
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 
 # 元の版は https://github.com/smooki/letmein/ を使っていたようだが、さすがに古

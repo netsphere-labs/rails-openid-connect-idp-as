@@ -3,14 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>OpenIDConnect OP (IdP) Sample</title>
+  <title><%= content_for(:title) %> - OpenIDConnect OP (IdP) Sample</title>
 
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= yield :head %>
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.png">
+
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <link rel="stylesheet" href="/bulma1/css/bulma.min.css" />
-  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  <%= javascript_include_tag "application", 
+                             "data-turbo-track": "reload", type: "module" %>
   <!-- All of BulmaJS -->
   <script src="/bulmajs/bulma.js"></script>
 </head>
