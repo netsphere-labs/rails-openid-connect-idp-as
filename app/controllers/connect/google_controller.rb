@@ -14,7 +14,7 @@ class Connect::GoogleController < ApplicationController
                   scope: ['openid', "email", "profile"], # 'openid' 必須
                   state: session[:state], # 推奨
                   nonce: session[:nonce]  # Implicit Flow では必須. FAPI では必須
-                )
+                ), allow_other_host: true
   end
 
   
