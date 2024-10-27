@@ -16,8 +16,10 @@ A sample authorization server acting as an OpenID Connect identity provider (OP 
 
 See https://www.nslabs.jp/digital-identity.rhtml
 
-Ruby on Rails 6.1. 
-
+PKCE に対応。検証に失敗するとクライアントに 次のエラーを返す:
+```
+invalid_grant :: The provided access grant is invalid, expired, or revoked (e.g. invalid assertion, expired authorization token, bad end-user password credentials, or mismatching authorization code and redirection URI).
+```
 
 
 
@@ -25,7 +27,7 @@ Ruby on Rails 6.1.
 
 ### Requirements
 
- - Ruby on Rails v6.1
+ - Ruby on Rails v7.2
  - <s>fb_graph2</s> 廃れた. Koala によるサンプル; https://gitlab.com/netsphere/rails-examples/-/tree/main/rails7/facebook-login/
  - sorcery   ※認証フレームワークは何でもよい。
  - openid_connect
