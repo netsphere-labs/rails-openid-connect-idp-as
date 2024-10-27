@@ -60,8 +60,10 @@
 </nav>
 
 
-<div class="content is-normal">
+<div class="container">
 
+<h1 class="title"><%= content_for(:title) %></h1>
+                      
 <% if (str = flash[:notice]) %>
 <div class="notification is-info" >
   <button class="delete"></button>
@@ -78,7 +80,7 @@
 
   <%= yield %>
 
-</div> <!-- /.content -->
+</div> <!-- /.container -->
 
 
 

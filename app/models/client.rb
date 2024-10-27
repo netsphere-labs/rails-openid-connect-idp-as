@@ -3,7 +3,8 @@
 # Relying Party (RP)
 class Client < ApplicationRecord
   [:contacts, :redirect_uris, :raw_registered_json].each do |serializable|
-    serialize serializable, JSON
+    # rails 7.2: 引数の数が変更. v7.1: 第2引数としてクラス名も可
+    serialize serializable, coder: JSON
   end
 
   # 'admin' account が client を所有する. => テナントの位置づけ

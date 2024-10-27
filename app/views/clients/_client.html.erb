@@ -30,7 +30,7 @@
   </details>
   <footer>
       <%= link_to 'Edit...', edit_client_path(client) %>
-      <%= link_to t('destroy'), client_path(client), 
-                  method: :delete, data:{confirm:'Are you sure?'} %>
+      <%= button_to t('destroy'), client_path(client), 
+                  method: :delete, data:{turbo_confirm:'Are you sure?'}, class:"button", form:{class:"is-inline-block"} %>
   </footer>
 </fieldset>
