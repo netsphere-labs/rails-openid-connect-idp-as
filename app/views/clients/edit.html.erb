@@ -1,4 +1,5 @@
-<h1><%= 'Edit ' + @client.name %></h1>
+
+<% content_for(:title) {"Edit " + @client.name } %>
 
 <article>
   <%= form_for @client, :method => :put, :html => {:class => 'box'} do |f| %>

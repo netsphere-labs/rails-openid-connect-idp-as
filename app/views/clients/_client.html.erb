@@ -1,23 +1,27 @@
 
 <fieldset class="client">
-  <h3>
-    <%= client.name %>
-    <code class="redirect_uris"><%= client.redirect_uris.try(:join, ' ') %></code>
-  </h3>
+  <h3 class="title is-3"><%= client.name %></h3>
+  <p><%= t('client.identifier') %>
+    <code><%= client.identifier %></code>
+
   <details>
-    <summary><%= t('client.credentials') %></summary>
+    <summary>Details:</summary>
     <dl>
-      <dt><%= t('client.identifier') %>
-      <dd><code><%= client.identifier %></code>
+      <dt>Redirect URIs:
+      <dd><% client.redirect_uris.each do |uri| %>
+        <code class="redirect_uris"><%= uri %></code>
+        <% end %>
+
       <dt><%= t('client.secret') %></dt>
       <dd><code><%= client.secret %></code>
     </dl>
     <nav class="authorize">
-      <h4><%= t('authorizations.new.title', client:client.name) %></h4>
+      <h4 class="title is-4"><%= t('authorizations.new.title', client:client.name) %></h4>
       <ul>
         <% Client.available_response_types.each do |response_type| %>
           <li>
-            <%= form_tag new_authorization_path, method: :get do %>
+            <%= form_tag new_authorization_path, method: :get, data:{turbo:false} do %>
+              <%= hidden_field_tag :redirect_uri, client.redirect_uris.first %>
               <%= hidden_field_tag :client_id, client.identifier %>
               <%= hidden_field_tag :response_type, response_type %>
               <%= hidden_field_tag :scope, Scope.all.collect(&:name).join(' ') %>
@@ -28,6 +32,7 @@
       </ul>
     </nav>
   </details>
+  
   <footer>
       <%= link_to 'Edit...', edit_client_path(client) %>
       <%= button_to t('destroy'), client_path(client), 

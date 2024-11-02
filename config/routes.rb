@@ -68,10 +68,8 @@ Rails.application.routes.draw do
   # UserInfo Endpoint
   match 'user_info',       to: 'user_info#show', :via => [:get, :post]
 
-  get   'jwks.json',     to: proc { |env| 
-                                [200, 
-                                 {'Content-Type' => 'application/json'}, 
-                                 [IdToken.config[:jwk_set].to_json]] }
+  # 
+  get   'jwks.json',     to: "discovery#jwk_set"
 
   # For details on the DSL available within this file, 
   # see https://guides.rubyonrails.org/routing.html

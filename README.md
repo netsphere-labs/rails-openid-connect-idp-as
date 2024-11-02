@@ -1,4 +1,7 @@
 
+bugs:
+ - response から email が drop する。ユーザの承諾の保存辺りが不味そう
+ 
 ●●未了
  - `registration_endpoint` 動的な登録の再実装
  - `end_session_endpoint` シングルログアウト (SLO) の実装

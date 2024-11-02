@@ -19,6 +19,7 @@ class FakeUser < ApplicationRecord
   
   def to_response_object access_token
     userinfo = userinfo()
+    #raise userinfo.inspect  # この段階では email 入っている
     unless access_token.accessible?(Scope::PROFILE)
       userinfo.all_attributes.each do |attribute|
         userinfo.send("#{attribute}=", nil) unless access_token.accessible?(attribute)

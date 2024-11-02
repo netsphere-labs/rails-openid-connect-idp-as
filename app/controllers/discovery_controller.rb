@@ -40,7 +40,11 @@ class DiscoveryController < ApiController
     end
   end
 
+  def jwk_set
+    render json: {keys: IdToken.config[:jwk_set]}.to_json
+  end
 
+  
 private
 
   def webfinger_discovery
