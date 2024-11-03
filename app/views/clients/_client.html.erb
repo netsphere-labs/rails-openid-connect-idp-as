@@ -22,6 +22,8 @@
           <li>
             <%= form_tag new_authorization_path, method: :get, data:{turbo:false} do %>
               <%= hidden_field_tag :redirect_uri, client.redirect_uris.first %>
+              <%= hidden_field_tag :nonce, "XXX" %>
+              <%= hidden_field_tag :code_challenge_method, "S256" %>
               <%= hidden_field_tag :client_id, client.identifier %>
               <%= hidden_field_tag :response_type, response_type %>
               <%= hidden_field_tag :scope, Scope.all.collect(&:name).join(' ') %>

@@ -30,10 +30,6 @@ class UserInfoController < ApiController
   
 private
 
-  def required_scopes
-    Scope::OPENID
-  end
-
   # for `before_action`
   def require_user_access_token
     require_access_token
@@ -45,7 +41,7 @@ private
     unless @current_token
       raise Rack::OAuth2::Server::Resource::Bearer::Unauthorized.new
     end
-    unless @current_token.try(:accessible?, required_scopes)
+    unless @current_token.try(:accessible?, Scope::OPENID)
       raise Rack::OAuth2::Server::Resource::Bearer::Forbidden.new(:insufficient_scope)
     end
   end

@@ -33,7 +33,8 @@ private
         # PKCE
         req.verify_code_verifier!(authorization.code_challenge)
         
-        access_token = authorization.access_token
+        access_token = authorization.access_token  # ここで scopes を copy ✓
+        #raise access_token.scopes.inspect  email がいる. OK
         res.access_token = access_token.to_bearer_token
         if access_token.accessible?(Scope::OPENID)
           res.id_token = access_token.fake_user.id_tokens.create!(

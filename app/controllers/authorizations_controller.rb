@@ -76,8 +76,8 @@ class AuthorizationsController < ApplicationController
     @fake_user = FakeUser.find params[:fake_user]
     # {"openid"=>"1", "email"=>"1", "profile"=>"1"}
     @authorized_scopes = params[:scope].keys.map do |n|
-      Scope.find_by_name(n) || raise
-    end
+                           Scope.find_by_name(n) || raise
+                         end
     approved = params[:approve]
     
     call_authorization_endpoint(@request_object) do |req, res|
@@ -208,7 +208,7 @@ private
         end
         authorization.save!
         authorization.scopes << @authorized_scopes # ユーザ (fake_user) が認可した scope
-        
+        # raise authorization.scopes.inspect ここには email がいる
         res.code = authorization.code
       end
     end

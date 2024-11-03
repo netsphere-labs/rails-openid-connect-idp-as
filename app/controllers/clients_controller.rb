@@ -55,7 +55,7 @@ class ClientsController < ApplicationController
       redirect_to dashboard_url, flash: {
                     notice: "Client #{@client.name} was successfully updated." }
     else
-      flash[:alert] = @client.errors.full_messages.to_sentence
+      #flash[:alert] = @client.errors.full_messages.to_sentence
       render :edit, status: :unprocessable_entity
     end
   end

@@ -33,15 +33,6 @@ class RequestObject < ApplicationRecord
   attr_accessor :client
   attr_accessor :params
 
-=begin
-  def to_request_object
-    OpenIDConnect::RequestObject.decode(
-      jwt_string,
-      (access_token || authorization).client.secret
-    )
-  end
-=end
-  
   
   def self.find_or_build_from_params(params, defaults = {})
     raise TypeError if params.nil?

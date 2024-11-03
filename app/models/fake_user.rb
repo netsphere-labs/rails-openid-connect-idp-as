@@ -20,20 +20,21 @@ class FakeUser < ApplicationRecord
   def to_response_object access_token
     userinfo = userinfo()
     #raise userinfo.inspect  # この段階では email 入っている
+    #raise access_token.scopes.inspect  # email がいる. OK
+    #raise access_token.accessible?(Scope::EMAIL).inspect  これは true OK
+    
     unless access_token.accessible?(Scope::PROFILE)
-      userinfo.all_attributes.each do |attribute|
-        userinfo.send("#{attribute}=", nil) unless access_token.accessible?(attribute)
+      ["name", "profile", "locale"].each do |attribute|
+        userinfo.send("#{attribute}=", nil) 
       end
     end
     # scope values を使って claims を制限する。OIDC Section 5.4
     if !access_token.accessible?(Scope::EMAIL)
-      userinfo.email = nil; userinfo.email_verified = nil
-    else
-      userinfo.email          = nil if !access_token.accessible?(:email)
-      userinfo.email_verified = nil if !access_token.accessible?(:email_verified)
+      userinfo.email = nil
+      userinfo.email_verified = nil
     end
-    userinfo.address      = nil unless access_token.accessible?(Scope::ADDRESS) || access_token.accessible?(:address)
-    userinfo.phone_number = nil unless access_token.accessible?(Scope::PHONE)   || access_token.accessible?(:phone)
+    userinfo.address      = nil unless access_token.accessible?(Scope::ADDRESS)
+    userinfo.phone_number = nil unless access_token.accessible?(Scope::PHONE) 
     # `sub` は必須.
     userinfo.sub = if access_token.client.ppid?
                      ppid_for(access_token.client.sector_identifier).identifier

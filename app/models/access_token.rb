@@ -39,7 +39,6 @@ class AccessToken < ApplicationRecord
   has_many :access_token_scopes
   has_many :scopes, through: :access_token_scopes
   
-  #has_one :access_token_request_object
   # "claims": "userinfo" クレーム要求を含めることができる。
   belongs_to :request_object, optional:true #, through: :access_token_request_object
 
@@ -59,16 +58,15 @@ class AccessToken < ApplicationRecord
     )
   end
 
-  def accessible?(_scopes_or_claims_ = nil)
-    claims = request_object.try(:to_request_object).try(:userinfo)
-    Array(_scopes_or_claims_).all? do |_scope_or_claim_|
-      case _scope_or_claim_
-      when Scope
-        scopes.include? _scope_or_claim_
-      else
-        claims.try(:accessible?, _scope_or_claim_)
-      end
-    end
+  # scope が大括り, claim が個々の項目
+  # @param _scope_ [Scope] ユーザがその scope の払出しを認めたか
+  def accessible?( _scope_ )
+    raise TypeError if !_scope_.is_a?(Scope)
+    # リクエストされた claims. 意味が違う
+    #claims = request_object ? request_object.params['claims'].try(:userinfo) : nil
+
+    # scopes = ユーザが払出しを認めたスコープ.
+    return scopes.include?(_scope_)
   end
 
 
