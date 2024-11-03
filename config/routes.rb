@@ -22,10 +22,12 @@ Rails.application.routes.draw do
   delete 'session', to: 'session#destroy'
 
   # List of RP
-  get 'dashboard', to: 'dashboard#show'
-
+  #get 'dashboard', to: 'dashboard#show'
+  
   # Relying Party (RP) - テナントが管理する
   resources :clients
+
+  resources :scopes
 
   # テナントユーザのログインのため
   namespace :connect do

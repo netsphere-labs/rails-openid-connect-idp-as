@@ -5,7 +5,7 @@
   <%= form_for @client, :html => {:class => 'box'} do |f| %>
     <%= render 'clients/form', client:@client, redirect_uris:@redirect_uris,
                                f: f %>
-    <%= link_to 'Cancel', '/dashboard', class:'button is-light' %>
+    <%= link_to 'Cancel', '/clients/', class:'button is-light' %>
     <%= f.submit class:'button is-primary' %>
   <% end %>
 </article>

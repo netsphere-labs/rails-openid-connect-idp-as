@@ -1,0 +1,11 @@
+<% content_for :title, "New scope" %>
+
+<h1>New scope</h1>
+
+<%= render "form", scope: @scope %>
+
+<br>
+
+<div>
+  <%= link_to "Back to scopes", scopes_path %>
+</div>

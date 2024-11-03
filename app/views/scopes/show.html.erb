@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @scope %>
+
+<div>
+  <%= link_to "Edit this scope", edit_scope_path(@scope) %> |
+  <%= link_to "Back to scopes", scopes_path %>
+
+  <%= button_to "Destroy this scope", @scope, method: :delete %>
+</div>

@@ -1,0 +1,11 @@
+
+<% content_for :title, "Scopes" %>
+
+<div id="scopes">
+  <% @scopes.each do |scope| %>
+    <%= render scope %>
+  <% end %>
+</div>
+
+<hr />
+<p><%= link_to "New scope...", new_scope_path %>

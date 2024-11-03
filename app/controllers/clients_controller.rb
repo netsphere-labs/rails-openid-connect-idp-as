@@ -6,6 +6,11 @@ class ClientsController < ApplicationController
 
   before_action :set_client, only: %i[ show edit update destroy ]
 
+  def index
+    @account = current_user
+    @clients = @account.clients
+  end
+  
   # GET /clients/1 or /clients/1.json
   def show
   end
@@ -28,8 +33,9 @@ class ClientsController < ApplicationController
                               uri.to_s.strip != ''
                             end
     if @client.save
-      redirect_to dashboard_url, flash: {
-                    notice: "Client #{@client.name} was successfully created." }
+      redirect_to( {action:"show", id:@client}, flash: {
+                     notice: "Client #{@client.name} was successfully created." }
+                 )
     else
       flash[:alert] = @client.errors.full_messages.to_sentence
       render :new, status: :unprocessable_entity 
@@ -52,8 +58,9 @@ class ClientsController < ApplicationController
                               uri.to_s.strip != ''
                             end
     if @client.save
-      redirect_to dashboard_url, flash: {
-                    notice: "Client #{@client.name} was successfully updated." }
+      redirect_to( {action:"show", id:@client}, flash: {
+                     notice: "Client #{@client.name} was successfully updated." }
+                 )
     else
       #flash[:alert] = @client.errors.full_messages.to_sentence
       render :edit, status: :unprocessable_entity
@@ -64,8 +71,9 @@ class ClientsController < ApplicationController
   # DELETE /clients/1 or /clients/1.json
   def destroy
     @client.destroy
-    redirect_to dashboard_url, flash: {
-                  notice: "Client #{@client.name} was successfully destroyed." }
+    redirect_to( {action:"index"}, flash: {
+                   notice: "Client #{@client.name} was successfully destroyed." }
+               )
   end
 
 
