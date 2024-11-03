@@ -11,8 +11,7 @@
 
 
 
-
-## OpenID Connect Discovery 1.0 ✓
+## OpenID Connect Discovery 1.0 ✅
 
  - Issuer discovery  ユーザ識別子のドメインパートのホストに対して、次のような `GET` リクエストを投げると、issuer を返す.
 ```
@@ -21,7 +20,7 @@
 ```
    ユーザ識別子のドメインパートが IdP ホストとは限らない。現在ではほとんど用いられない
 
- - OpenID Provider Configuration  必須✓
+ - OpenID Provider Configuration  必須 ✅
    `<issuer>/.well-known/openid-configuration` を `GET` する
 
 
@@ -30,8 +29,8 @@
 ## OpenID Connect Core 1.0
 
  - No.4 Token Endpoint におけるクライアント認証
-   + "client_secret_basic" ✓
-   + "client_secret_post" ✓
+   + "client_secret_basic" ✅
+   + "client_secret_post" ✅
    + "private_key_jwt",  ●●未了. FAPI はこのサポートが必須. マジか. Entra ID (旧 AzureAD) ぐらいしかサポートする IdP はない.
 
  - No.5 `"private_key_jwt"` で RSA を用いる場合、キーサイズは 2048bit 以上。
@@ -41,7 +40,7 @@
    テストのため, Fake Users 画面から、認可した scope を削除できるようにする。●●未了
    
  - クライアントが `openid` スコープを要求した場合, `nonce` パラメータが必須。
-   レスポンスの ID Token 内に `nonce` を埋め込む. ✓
+   レスポンスの ID Token 内に `nonce` を埋め込む. ✅
    
    The Authorization Code Flow では OPTIONAL, The Implicit Flow, Hybrid Flow では REQUIRED だが、前者でもリクエストに含めるべき。
 
@@ -52,13 +51,13 @@
 
 
 
-## Proof Key for Code Exchange by OAuth Public Clients (PKCE, RFC 7636) ✓
+## Proof Key for Code Exchange by OAuth Public Clients (PKCE, RFC 7636) ✅
 
- - No.7 PKCE (RFC 7636) with `S256`  実装すみ✓
+ - No.7 PKCE (RFC 7636) with `S256`  実装すみ✅
 
  - 認可リクエストは明示的に `code_challenge_method=S256` を含めなければならない。
 
- - discovery に `code_challenge_methods_supported` がある。(RFC 8414) ✓
+ - discovery に `code_challenge_methods_supported` がある。(RFC 8414) ✅
 
 ほかの IdP:
    + Yahoo!  discovery あり. リクエストは任意
@@ -71,7 +70,7 @@
 
 ### The OAuth 2.0 Authorization Framework: JWT-Secured Authorization Request (JAR, RFC 9101)
 
- - クライアントは, `request` パラメータで署名付きの request object を送付。OpenID Connect Core 1.0 で要求されるパラメータであっても、request object の外側のものは無視。✓
+ - クライアントは, `request` パラメータで署名付きの request object を送付。OpenID Connect Core 1.0 で要求されるパラメータであっても、request object の外側のものは無視。✅
 
  - AS 側でクライアントの公開鍵を使って署名の検証 ●未了
 
