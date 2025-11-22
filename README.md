@@ -11,6 +11,8 @@ bugs:
 
 # Rails OpenID Connect IdP AS (former OpenID Connect OP Sample)
 
+Forked from <a href="https://github.com/nov/openid_connect_sample/commit/a5b7ee5b63508d99a3a36b4537809dfa64ba3b1f">nov/openid_connect_sample</a> 
+
 ## What's this?
 
 A sample authorization server acting as an OpenID Connect identity provider (OP or IdP) using the `openid_connect` gem. The Authorization Code Flow with PKCE, the Implicit Flow and the Hybrid Flow are supported.
